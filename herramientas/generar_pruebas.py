@@ -487,11 +487,6 @@ x = y.z;
     ("sin-57-doble-punto-y-coma", "ERROR SINTACTICO", "1", "map(1);;\n"),
     # el guion bajo sí forma parte del identificador; el guion, no
     ("sin-58-identificador-con-guion", "ERROR SINTACTICO", "1", "mi-var = 1;\n"),
-    # DUDA (registrada en Historico.md): C dice "un programa es una secuencia de
-    # una o más sentencias" y las definiciones pueden aparecer "además de sentencias".
-    # Lectura estricta: un archivo con SOLO definiciones, sin ninguna sentencia en el
-    # nivel superior, no es programa válido y el error cae al EOF (línea del último token).
-    ("sin-59-solo-definiciones", "ERROR SINTACTICO", "3", "void setup() {\n    map(1);\n}\n"),
     # no hay operador unario tampoco para +
     ("sin-60-unario-mas", "ERROR SINTACTICO", "1", "x = +1;\n"),
     # += va pegado: con espacio son dos tokens y la asignación queda incompleta

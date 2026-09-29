@@ -1,0 +1,58 @@
+# gramatica.txt — Gramática formal del subconjunto de Arduino (C++ para microcontrolador)
+# Grupo N.º 21 — Compiladores 2026
+# Notación: sección 8.2 del enunciado.
+# Símbolo inicial: programa (primer no terminal).
+
+# --- Estructura del programa y nivel superior (Apartado C) ---
+programa -> elemento | programa elemento
+elemento -> sentencia | definicion
+
+# --- Definiciones de setup() y loop() (Apartado D) ---
+definicion -> VOID SETUP PARENTESIS_IZQ PARENTESIS_DER LLAVE_IZQ sentencias LLAVE_DER | VOID LOOP PARENTESIS_IZQ PARENTESIS_DER LLAVE_IZQ sentencias LLAVE_DER
+
+# --- Bloque de sentencias (Apartado E) ---
+sentencias -> sentencia | sentencias sentencia
+
+# --- Sentencias individuales (Apartado D) ---
+sentencia -> declaracion | asignacion | llamada_sentencia PUNTO_Y_COMA
+
+# Declaración de variables: con y sin inicialización
+declaracion -> tipo IDENTIFICADOR PUNTO_Y_COMA | tipo IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
+
+# Asignaciones (=, +=, -=)
+asignacion -> IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA | IDENTIFICADOR SUMA_IGUAL expresion PUNTO_Y_COMA | IDENTIFICADOR RESTA_IGUAL expresion PUNTO_Y_COMA
+
+# Tipos de datos del lenguaje
+tipo -> BOOLEAN | CHAR | FLOAT
+
+# --- Llamadas a funciones (Apartados D y E) ---
+# Como sentencia pueden invocarse tanto las que no devuelven valor como las que devuelven valor
+llamada_sentencia -> llamada_sin_valor | llamada_valor
+
+# Funciones sin valor de retorno (solo como sentencia, nunca dentro de expresiones): delay, Serial.println
+llamada_sin_valor -> DELAY PARENTESIS_IZQ argumentos PARENTESIS_DER | SERIAL_PRINTLN PARENTESIS_IZQ argumentos PARENTESIS_DER
+
+# Función que devuelve valor (puede usarse como operando o como sentencia): map
+llamada_valor -> MAP PARENTESIS_IZQ argumentos PARENTESIS_DER
+
+# Lista de uno o más argumentos separados por coma
+argumentos -> expresion | argumentos COMA expresion
+
+# --- Expresiones y jerarquía de precedencia (Apartado E) ---
+# Suma y resta (menor precedencia, asociatividad por la izquierda)
+expresion -> expresion SUMA termino | expresion RESTA termino | termino
+
+# Multiplicación y división (mayor precedencia, asociatividad por la izquierda)
+termino -> termino MULTIPLICACION factor | termino DIVISION factor | factor
+
+# Operandos / Factores
+factor -> IDENTIFICADOR | numero | PARENTESIS_IZQ expresion PARENTESIS_DER | llamada_valor | CADENA | booleano | constante
+
+# Números (enteros y decimales sin signo)
+numero -> ENTERO | DECIMAL
+
+# Literales booleanos
+booleano -> TRUE | FALSE
+
+# Constantes del lenguaje
+constante -> HIGH | INPUT | INPUT_PULLUP | LED_BUILTIN | LOW | OUTPUT

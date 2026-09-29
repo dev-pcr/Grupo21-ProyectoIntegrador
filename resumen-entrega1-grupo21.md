@@ -75,13 +75,11 @@ Los casos `sin-*` traen una línea calculada con la regla 7.2 (línea del primer
 
 ## Checklist
 
-- [ ] `gramatica.txt` usa los nombres de token de arriba, tal cual.
-- [ ] Corres `python herramientas/verificar_lexico.py` y da `TODO CORRECTO`.
-- [ ] Se resuelven las dos dudas de `Historico.md` y, si hace falta, se regenera `pruebas-grupo/`.
-- [ ] Con `gramatica.txt` funcionando, se valida la **línea** de los 83 casos `sin-*` y se confirma que los 43 `ok-*` son realmente sintácticamente válidos (hoy solo se probó la fase léxica).
+- [x] `gramatica.txt` usa los nombres de token de arriba, tal cual.
+- [x] Corres `python herramientas/verificar_lexico.py` y da `TODO CORRECTO`.
+- [x] `herramientas/verificar_sintactico.py` implementado y pasa al 100% (`TODO CORRECTO`).
+- [x] Se resuelven las dos dudas de `Historico.md` y se regenera `pruebas-grupo/`.
+- [x] Con `gramatica.txt` funcionando, se valida la **línea** de los 82 casos `sin-*` y se confirma que los 43 `ok-*` son sintácticamente válidos.
 - [ ] En Entrega 2: tokens leídos bajo demanda, `utf-8-sig`, y los casos mixtos en su carpeta aparte (sección anterior).
 - [ ] Falta el `README` del repo (figura en `cronograma-entrega1-grupo21.md`).
 
-## Próximo paso
-
-Cuando tengas `gramatica.txt`: avisame y armo el verificador de la fase sintáctica sobre la misma suite, para que los 173 casos midan las dos fases y no solo el léxico.

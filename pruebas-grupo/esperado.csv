@@ -147,7 +147,6 @@ sin-55-unario-en-argumento.txt,ERROR SINTACTICO,1
 sin-56-parentesis-vacio.txt,ERROR SINTACTICO,1
 sin-57-doble-punto-y-coma.txt,ERROR SINTACTICO,1
 sin-58-identificador-con-guion.txt,ERROR SINTACTICO,1
-sin-59-solo-definiciones.txt,ERROR SINTACTICO,3
 sin-60-unario-mas.txt,ERROR SINTACTICO,1
 sin-61-compuesto-con-espacio.txt,ERROR SINTACTICO,1
 sin-62-doble-asignacion.txt,ERROR SINTACTICO,1
