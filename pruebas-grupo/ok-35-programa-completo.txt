@@ -1,0 +1,11 @@
+float inicio = 1;
+
+void setup() {
+    float velocidad = 1.5;
+    delay(velocidad);
+}
+
+void loop() {
+    velocidad -= 0.5;
+    Serial.println(velocidad);
+}

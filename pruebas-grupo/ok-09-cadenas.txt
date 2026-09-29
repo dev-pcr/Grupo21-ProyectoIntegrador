@@ -1,0 +1,7 @@
+Serial.println("hola mundo");
+Serial.println('x');
+Serial.println("");
+Serial.println('');
+Serial.println("comilla simple ' adentro");
+Serial.println('doble " adentro');
+Serial.println("señal € ok");

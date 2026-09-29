@@ -1,0 +1,6 @@
+void setup() {
+    map(1);
+}
+void setup() {
+    map(1);
+}

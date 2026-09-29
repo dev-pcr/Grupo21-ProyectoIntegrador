@@ -1,0 +1,3 @@
+void /* c */ setup() {
+    map(1);
+}

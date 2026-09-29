@@ -1,0 +1,3 @@
+# Los casos de prueba son fixtures: el fin de línea (LF, CRLF o solo CR) es parte del caso.
+pruebas-grupo/** -text
+casos/** -text

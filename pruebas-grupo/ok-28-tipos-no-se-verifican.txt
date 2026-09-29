@@ -1,0 +1,3 @@
+char c = "hola";
+boolean b = 1;
+float f = false;

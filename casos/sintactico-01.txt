@@ -1,0 +1,5 @@
+float resultado = map("libre") + false;
+contador -= map(OUTPUT + true * 214.62 / 328.42;  /* acumula el total */
+void setup() {
+    Serial.println(HIGH);
+}

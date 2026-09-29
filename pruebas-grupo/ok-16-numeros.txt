@@ -1,0 +1,5 @@
+float a = 0007;
+float b = 0;
+float c = 0.5;
+float d = 420.46;
+float e = 1234567890;

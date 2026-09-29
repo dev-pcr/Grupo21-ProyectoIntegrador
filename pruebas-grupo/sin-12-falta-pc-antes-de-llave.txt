@@ -1,0 +1,3 @@
+void setup() {
+    float x = 1
+}

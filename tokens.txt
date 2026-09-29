@@ -1,0 +1,194 @@
+# tokens.txt — Lista de tokens del lenguaje asignado al Grupo N.º 21
+# Lenguaje fuente: subconjunto de Arduino (C++ para microcontrolador), según el Anexo (apartado B).
+# Notación: sección 8.1 del enunciado. Cada token se escribe en una línea: NOMBRE patrón,
+# donde el patrón es una expresión regular con la sintaxis del módulo re de Python (la que usa PLY).
+# El orden del archivo importa: cuando dos patrones reconocen cadenas de la misma longitud
+# (empate), gana el escrito primero. Por eso las palabras reservadas, los tipos, los booleanos,
+# las constantes y las funciones van ANTES de IDENTIFICADOR: de lo contrario, en "true" o
+# "INPUT_PULLUP" empatarían con el patrón de identificador y perderían.
+# Las líneas que empiezan con # son comentarios y las líneas vacías se ignoran.
+
+# --- Directivas @ignorar: lo que el analizador descarta antes de buscar tokens ---
+
+# descarta: espacios, tabulaciones y retornos de carro (el salto de línea lo descarta el paso 1 del algoritmo)
+@ignorar [ \t\r]+
+
+# descarta: comentarios de bloque, que empiezan con /* y terminan en el primer */ posterior; pueden ocupar varias líneas y no se anidan
+@ignorar /\*[\s\S]*?\*/
+
+# --- Palabras reservadas ---
+
+# descripción: palabra reservada que encabeza la definición del cuerpo de inicialización
+# ejemplos: setup
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+SETUP setup
+
+# descripción: palabra reservada que encabeza la definición del cuerpo que se repite indefinidamente
+# ejemplos: loop
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+LOOP loop
+
+# descripción: palabra reservada que indica el tipo de retorno de setup() y loop()
+# ejemplos: void
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+VOID void
+
+# --- Tipos ---
+
+# descripción: tipo de dato booleano
+# ejemplos: boolean
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+BOOLEAN boolean
+
+# descripción: tipo de dato carácter
+# ejemplos: char
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+CHAR char
+
+# descripción: tipo de dato numérico con parte decimal
+# ejemplos: float
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+FLOAT float
+
+# --- Booleanos ---
+
+# descripción: valor booleano falso
+# ejemplos: false
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+FALSE false
+
+# descripción: valor booleano verdadero
+# ejemplos: true
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador.
+TRUE true
+
+# --- Constantes ---
+
+# descripción: constante de Arduino que representa un nivel lógico alto
+# ejemplos: HIGH
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador.
+HIGH HIGH
+
+# descripción: constante de Arduino que indica un pin configurado como entrada
+# ejemplos: INPUT
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador; es prefijo de INPUT_PULLUP, pero gana el patrón más largo.
+INPUT INPUT
+
+# descripción: constante de Arduino que indica un pin configurado como entrada con resistencia de pull-up interna
+# ejemplos: INPUT_PULLUP
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador.
+INPUT_PULLUP INPUT_PULLUP
+
+# descripción: constante de Arduino que identifica el LED integrado de la placa
+# ejemplos: LED_BUILTIN
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador.
+LED_BUILTIN LED_BUILTIN
+
+# descripción: constante de Arduino que representa un nivel lógico bajo
+# ejemplos: LOW
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador.
+LOW LOW
+
+# descripción: constante de Arduino que indica un pin configurado como salida
+# ejemplos: OUTPUT
+# observaciones: se escribe exactamente como figura, en mayúsculas; no puede usarse como identificador.
+OUTPUT OUTPUT
+
+# --- Funciones ---
+
+# descripción: función que devuelve un valor; escala un número de un rango a otro
+# ejemplos: map
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador; como devuelve valor, puede usarse como operando o como sentencia.
+MAP map
+
+# descripción: función que pausa el programa durante un tiempo medido en milisegundos
+# ejemplos: delay
+# observaciones: se escribe exactamente como figura, en minúsculas; no puede usarse como identificador; no devuelve valor: solo puede usarse como sentencia, nunca dentro de una expresión.
+DELAY delay
+
+# descripción: función que imprime un valor por el puerto serie con salto de línea
+# ejemplos: Serial.println
+# observaciones: se escribe sin espacios alrededor del punto y respetando mayúsculas; no puede usarse como identificador; no devuelve valor: solo puede usarse como sentencia, nunca dentro de una expresión.
+SERIAL_PRINTLN Serial\.println
+
+# --- Signos y operadores ---
+
+# descripción: paréntesis de apertura
+# ejemplos: (
+PARENTESIS_IZQ \(
+
+# descripción: paréntesis de cierre
+# ejemplos: )
+PARENTESIS_DER \)
+
+# descripción: llave de apertura, que abre el cuerpo de setup() y loop()
+# ejemplos: {
+LLAVE_IZQ \{
+
+# descripción: llave de cierre, que cierra el cuerpo de setup() y loop()
+# ejemplos: }
+LLAVE_DER \}
+
+# descripción: coma, separa argumentos en una llamada a función
+# ejemplos: ,
+COMA ,
+
+# descripción: punto y coma, termina declaraciones, asignaciones y llamadas
+# ejemplos: ;
+PUNTO_Y_COMA ;
+
+# descripción: operador de asignación
+# ejemplos: =
+# observaciones: solo asigna; el lenguaje no define operador de comparación, por lo que == no es un solo token.
+IGUAL =
+
+# descripción: operador de asignación con suma
+# ejemplos: +=
+# observaciones: se escribe pegado, sin espacio entre + y =.
+SUMA_IGUAL \+=
+
+# descripción: operador de asignación con resta
+# ejemplos: -=
+# observaciones: se escribe pegado, sin espacio entre - y =.
+RESTA_IGUAL -=
+
+# descripción: operador aritmético de suma
+# ejemplos: +
+SUMA \+
+
+# descripción: operador aritmético de resta
+# ejemplos: -
+# observaciones: el lenguaje no tiene operadores unarios: -x y -5 no son expresiones; el guión solo aparece como operador binario o dentro de -=.
+RESTA -
+
+# descripción: operador aritmético de multiplicación
+# ejemplos: *
+# observaciones: junto con / tiene mayor precedencia que + y - (la precedencia se define en gramatica.txt).
+MULTIPLICACION \*
+
+# descripción: operador aritmético de división
+# ejemplos: /
+# observaciones: junto con * tiene mayor precedencia que + y - (la precedencia se define en gramatica.txt).
+DIVISION /
+
+# --- Literales ---
+
+# descripción: cadena de texto delimitada por comillas dobles o por comillas simples
+# ejemplos: "hola", 'a', ""
+# observaciones: ocupa una sola línea; termina en la primera comilla igual a la de apertura; no hay secuencias de escape; puede contener el otro tipo de comilla.
+CADENA "[^"\n]*"|'[^'\n]*'
+
+# descripción: número decimal
+# ejemplos: 3.25, 0.5, 195.39
+# observaciones: uno o más dígitos, un punto y uno o más dígitos; sin signo ni exponente; requiere dígitos a ambos lados del punto (3. no es un decimal válido); gana sobre ENTERO porque reconoce la cadena más larga.
+DECIMAL [0-9]+\.[0-9]+
+
+# descripción: número entero
+# ejemplos: 0, 42, 420
+# observaciones: uno o más dígitos; sin signo ni exponente (el signo no forma parte del lexema: -5 se lee como RESTA y luego ENTERO, y no es una expresión válida).
+ENTERO [0-9]+
+
+# descripción: identificador: nombre de variable o de función definida por el programa
+# ejemplos: x, cantidad, _contador, led1
+# observaciones: una letra o un guion bajo seguido de cero o más letras, dígitos o guiones bajos; letras sin tilde ni eñe (solo ASCII); debe escribirse después de todas las palabras del archivo para que, en caso de empate de longitud, gane la palabra y no el identificador.
+IDENTIFICADOR [a-zA-Z_][a-zA-Z0-9_]*

@@ -1,0 +1,10 @@
+boolean monto;
+map(true);
+void loop() { €
+    codigo = LOW;
+}
+void loop() {
+    codigo -= false;
+    cantidad += activo;  /* ojo con la división */
+}
+float indice;

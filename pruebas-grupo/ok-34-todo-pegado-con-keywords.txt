@@ -1,0 +1,1 @@
+float a=HIGH+LOW*INPUT;boolean b=true;char c='x';

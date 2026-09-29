@@ -1,0 +1,9 @@
+/* TODO: validar la entrada
+   fin del bloque */
+map(INPUT);
+float activo = (195.39) -
+nombre += true / OUTPUT;
+void loop() {
+    valor = monto;
+    map(items);  /* ajuste pedido en la revisión */
+}

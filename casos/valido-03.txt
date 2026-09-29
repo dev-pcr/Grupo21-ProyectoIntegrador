@@ -1,0 +1,8 @@
+void setup() {
+    char nombre = map(LOW);
+}
+void loop() {
+    contador -= 427.32;
+    delay(INPUT_PULLUP);
+}
+salario -= map(OUTPUT);

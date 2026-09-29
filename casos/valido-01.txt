@@ -1,0 +1,8 @@
+map(monto + false);
+/* valores iniciales */
+/* valores iniciales */
+void setup() {
+    float cantidad;
+/* fin del bloque
+   revisar este cálculo */
+}

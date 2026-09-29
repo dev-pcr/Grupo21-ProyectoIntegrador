@@ -1,0 +1,12 @@
+void setup() {
+    char c = 'a';
+}
+void setup() {
+    boolean b = true;
+}
+void loop() {
+    delay(1);
+}
+void loop() {
+    Serial.println("hola");
+}

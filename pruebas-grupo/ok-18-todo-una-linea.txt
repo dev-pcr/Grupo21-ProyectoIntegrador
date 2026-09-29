@@ -1,0 +1,1 @@
+void setup() { float x = 1; } void loop() { delay(x); }

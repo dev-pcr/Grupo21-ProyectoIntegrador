@@ -1,0 +1,10 @@
+codigo = 132.81 - OUTPUT;
+/* caso borde: lista vacía
+   fin del bloque */
+precio += monto + 280.46 * 340.12;
+void loop() {
+    float stock;
+}
+void setup() { \
+    map(LED_BUILTIN);
+}

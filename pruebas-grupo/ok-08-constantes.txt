@@ -1,0 +1,6 @@
+float a = HIGH;
+float b = LOW;
+float c = INPUT;
+float d = OUTPUT;
+float e = INPUT_PULLUP;
+float f = LED_BUILTIN;

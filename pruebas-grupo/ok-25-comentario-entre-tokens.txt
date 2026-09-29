@@ -1,0 +1,2 @@
+map /* entre */ (1);
+void setup() { /* adentro */ float x = 1; }

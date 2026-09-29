@@ -1,0 +1,5 @@
+float Loop = 1;
+float Setup = 2;
+float Void = 3;
+float True = 4;
+float INPUTx = 5;

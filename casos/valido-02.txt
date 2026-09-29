@@ -1,0 +1,6 @@
+float indice = false * LED_BUILTIN + 420.46;
+/* valores iniciales */
+/* ojo con la división */
+codigo -= total;
+delay(edad + map(map(OUTPUT)));
+Serial.println(OUTPUT + resultado);  /* ajuste pedido en la revisión */

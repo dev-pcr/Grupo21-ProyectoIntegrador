@@ -1,0 +1,7 @@
+float loopx = 1;
+float HIGHWAY = 2;
+float INPUTX = 3;
+float mapa = 4;
+float setupx = 5;
+float _contador = 6;
+float x1 = 7;

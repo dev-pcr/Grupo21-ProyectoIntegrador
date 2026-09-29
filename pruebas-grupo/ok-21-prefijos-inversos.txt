@@ -1,0 +1,5 @@
+float INPUT_PULLUPX = 1;
+float HIGHLOW = 2;
+float SETUP = 3;
+float voidx = 4;
+float true1 = 5;

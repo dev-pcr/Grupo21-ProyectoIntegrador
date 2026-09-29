@@ -1,0 +1,6 @@
+void setup() {
+  float x = 1.5;
+}
+void loop() {
+  x += 2;
+}

@@ -1,0 +1,3 @@
+float total = 1 + 2 * 3;
+total -= 4;
+Serial.println(total);

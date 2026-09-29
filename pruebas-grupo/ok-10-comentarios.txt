@@ -1,0 +1,9 @@
+/* uno */
+/* multi
+   lineas
+   con é y € y // y " */
+map(1);   /* inline */
+/**/
+/*
+*/
+map(2);

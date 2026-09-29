@@ -1,0 +1,3 @@
+void setup() {
+    @marcar(1);
+}

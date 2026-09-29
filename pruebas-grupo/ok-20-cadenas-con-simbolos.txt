@@ -1,0 +1,4 @@
+Serial.println("{;}");
+Serial.println("/* no es comentario */");
+Serial.println("// tampoco");
+Serial.println("ruta\archivo");

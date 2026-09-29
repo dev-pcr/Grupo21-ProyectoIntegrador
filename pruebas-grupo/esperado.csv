@@ -1,0 +1,174 @@
+archivo,esperado,linea
+ok-01-una-sentencia.txt,OK,
+ok-02-ambas-definiciones.txt,OK,
+ok-03-definiciones-desordenadas.txt,OK,
+ok-04-definiciones-multiples.txt,OK,
+ok-05-solo-sentencias.txt,OK,
+ok-06-expresiones.txt,OK,
+ok-07-tipos-declaraciones.txt,OK,
+ok-08-constantes.txt,OK,
+ok-09-cadenas.txt,OK,
+ok-10-comentarios.txt,OK,
+ok-11-formato-libre.txt,OK,
+ok-12-sin-newline-final.txt,OK,
+ok-13-crlf.txt,OK,
+ok-14-identificadores-parecidos.txt,OK,
+ok-15-sensibilidad-mayusculas.txt,OK,
+ok-16-numeros.txt,OK,
+ok-17-argumentos-multiples.txt,OK,
+ok-18-todo-una-linea.txt,OK,
+ok-19-lineas-en-blanco.txt,OK,
+ok-20-cadenas-con-simbolos.txt,OK,
+ok-21-prefijos-inversos.txt,OK,
+ok-22-decimales-limite.txt,OK,
+ok-23-enteros-largos.txt,OK,
+ok-24-identificadores-limites.txt,OK,
+ok-25-comentario-entre-tokens.txt,OK,
+ok-26-sin-espacios.txt,OK,
+ok-27-llamadas-anidadas.txt,OK,
+ok-28-tipos-no-se-verifican.txt,OK,
+ok-29-comments-consecutivos.txt,OK,
+ok-30-expresiones-anidadas.txt,OK,
+ok-31-asignaciones-compuestas.txt,OK,
+ok-32-crlf-con-comment-multilinea.txt,OK,
+ok-33-comment-al-final.txt,OK,
+ok-34-todo-pegado-con-keywords.txt,OK,
+ok-35-programa-completo.txt,OK,
+ok-36-comentario-entre-void-y-setup.txt,OK,
+ok-37-newlines-dentro-definicion.txt,OK,
+ok-38-operandos-todos.txt,OK,
+ok-39-asociatividad.txt,OK,
+ok-40-solo-cr.txt,OK,
+ok-41-muchos-argumentos.txt,OK,
+ok-42-identificador-largo.txt,OK,
+ok-43-definiciones-identicas.txt,OK,
+lex-01-letra-con-tilde.txt,ERROR LEXICO,2
+lex-02-comilla-doble-sin-cerrar.txt,ERROR LEXICO,3
+lex-03-comilla-simple-sin-cerrar.txt,ERROR LEXICO,2
+lex-04-decimal-punto-colgante.txt,ERROR LEXICO,2
+lex-05-dos-puntos.txt,ERROR LEXICO,2
+lex-06-exclamacion.txt,ERROR LEXICO,2
+lex-07-arroba.txt,ERROR LEXICO,2
+lex-08-corchete.txt,ERROR LEXICO,2
+lex-09-interrogacion.txt,ERROR LEXICO,2
+lex-10-euro.txt,ERROR LEXICO,2
+lex-11-numeral.txt,ERROR LEXICO,2
+lex-12-serial-con-espacios.txt,ERROR LEXICO,2
+lex-13-serial-en-minusculas.txt,ERROR LEXICO,2
+lex-14-primer-error-gana.txt,ERROR LEXICO,2
+lex-15-error-tras-comment-multilinea.txt,ERROR LEXICO,5
+lex-16-error-tras-lineas-en-blanco.txt,ERROR LEXICO,4
+lex-17-error-linea-1.txt,ERROR LEXICO,1
+lex-18-error-ultima-linea.txt,ERROR LEXICO,2
+lex-19-cadena-multilinea.txt,ERROR LEXICO,1
+lex-20-punto-suelto.txt,ERROR LEXICO,2
+lex-21-punto-inicial.txt,ERROR LEXICO,2
+lex-22-puntos-seguidos.txt,ERROR LEXICO,2
+lex-23-prefijo-de-serial.txt,ERROR LEXICO,2
+lex-24-comment-luego-error-misma-linea.txt,ERROR LEXICO,1
+lex-25-error-tras-comment-1-linea.txt,ERROR LEXICO,3
+lex-26-error-despues-de-crlf.txt,ERROR LEXICO,3
+lex-27-error-tras-comment-crlf.txt,ERROR LEXICO,4
+lex-28-error-sin-newline-final.txt,ERROR LEXICO,2
+lex-29-backslash-no-es-escape.txt,ERROR LEXICO,1
+lex-30-ampersand.txt,ERROR LEXICO,2
+lex-31-triple-comilla.txt,ERROR LEXICO,2
+lex-32-corchete-cierre.txt,ERROR LEXICO,2
+lex-33-comilla-escapada.txt,ERROR LEXICO,1
+lex-34-form-feed.txt,ERROR LEXICO,1
+lex-35-error-linea-12.txt,ERROR LEXICO,12
+lex-36-dos-comments-y-error.txt,ERROR LEXICO,1
+lex-37-error-al-final-de-linea-cargada.txt,ERROR LEXICO,1
+lex-38-error-dentro-de-bloque.txt,ERROR LEXICO,3
+lex-39-error-tras-string-con-comment.txt,ERROR LEXICO,1
+lex-40-serial-print.txt,ERROR LEXICO,2
+lex-41-serial-begin.txt,ERROR LEXICO,1
+lex-42-porcentaje.txt,ERROR LEXICO,2
+lex-43-menor-que.txt,ERROR LEXICO,2
+lex-44-mayor-que.txt,ERROR LEXICO,1
+lex-45-comillas-mezcladas.txt,ERROR LEXICO,1
+lex-46-espacio-no-separable.txt,ERROR LEXICO,2
+lex-47-tab-vertical.txt,ERROR LEXICO,1
+sin-01-archivo-vacio.txt,ERROR SINTACTICO,1
+sin-02-solo-comentarios.txt,ERROR SINTACTICO,1
+sin-03-bloque-vacio-setup.txt,ERROR SINTACTICO,1
+sin-04-bloque-vacio-loop.txt,ERROR SINTACTICO,2
+sin-05-unario-menos-numero.txt,ERROR SINTACTICO,1
+sin-06-unario-menos-identificador.txt,ERROR SINTACTICO,1
+sin-07-delay-sin-argumentos.txt,ERROR SINTACTICO,1
+sin-08-println-sin-argumentos.txt,ERROR SINTACTICO,1
+sin-09-delay-como-operando.txt,ERROR SINTACTICO,1
+sin-10-println-como-operando.txt,ERROR SINTACTICO,1
+sin-11-falta-pc-entre-sentencias.txt,ERROR SINTACTICO,2
+sin-12-falta-pc-antes-de-llave.txt,ERROR SINTACTICO,3
+sin-13-falta-pc-eof.txt,ERROR SINTACTICO,1
+sin-14-falta-llave-eof.txt,ERROR SINTACTICO,2
+sin-15-falta-llave-eof-sentencias.txt,ERROR SINTACTICO,3
+sin-16-llave-sobrante.txt,ERROR SINTACTICO,2
+sin-17-identificador-solo.txt,ERROR SINTACTICO,1
+sin-18-expresion-incompleta.txt,ERROR SINTACTICO,1
+sin-19-declaracion-sin-pc-eof.txt,ERROR SINTACTICO,1
+sin-20-igual-doble.txt,ERROR SINTACTICO,1
+sin-21-tipo-de-otro-lenguaje.txt,ERROR SINTACTICO,1
+sin-22-coma-final.txt,ERROR SINTACTICO,1
+sin-23-argumentos-sin-coma.txt,ERROR SINTACTICO,1
+sin-24-operador-sin-operando.txt,ERROR SINTACTICO,1
+sin-25-definicion-anidada-setup.txt,ERROR SINTACTICO,2
+sin-26-definicion-anidada-loop.txt,ERROR SINTACTICO,2
+sin-27-tipo-como-operando.txt,ERROR SINTACTICO,1
+sin-28-funcion-sin-llamada.txt,ERROR SINTACTICO,1
+sin-29-comentario-cpp.txt,ERROR SINTACTICO,1
+sin-30-comentario-sin-cerrar.txt,ERROR SINTACTICO,1
+sin-31-palabra-reservada-como-sentencia.txt,ERROR SINTACTICO,1
+sin-32-solo-llaves.txt,ERROR SINTACTICO,1
+sin-33-asignacion-incompleta-eof.txt,ERROR SINTACTICO,1
+sin-34-solo-espacios.txt,ERROR SINTACTICO,1
+sin-35-setup-sin-void.txt,ERROR SINTACTICO,1
+sin-36-void-sin-llaves.txt,ERROR SINTACTICO,1
+sin-37-void-sin-parentesis.txt,ERROR SINTACTICO,1
+sin-38-definicion-con-argumentos.txt,ERROR SINTACTICO,1
+sin-39-declaracion-sin-identificador.txt,ERROR SINTACTICO,1
+sin-40-solo-tipo.txt,ERROR SINTACTICO,1
+sin-41-dos-operadores.txt,ERROR SINTACTICO,1
+sin-42-dos-operandos.txt,ERROR SINTACTICO,1
+sin-43-parentesis-sin-cerrar.txt,ERROR SINTACTICO,1
+sin-44-parentesis-suelto.txt,ERROR SINTACTICO,1
+sin-45-llamada-sin-cerrar.txt,ERROR SINTACTICO,1
+sin-46-llave-en-llamada.txt,ERROR SINTACTICO,1
+sin-47-argumento-con-asignacion.txt,ERROR SINTACTICO,1
+sin-48-cadena-como-sentencia.txt,ERROR SINTACTICO,1
+sin-49-numero-como-sentencia.txt,ERROR SINTACTICO,1
+sin-50-nombre-reservado-como-variable.txt,ERROR SINTACTICO,1
+sin-51-operador-inexistente.txt,ERROR SINTACTICO,1
+sin-52-asterisco-de-comment-suelto.txt,ERROR SINTACTICO,1
+sin-53-void-sin-cuerpo-eof.txt,ERROR SINTACTICO,2
+sin-54-println-con-sufijo.txt,ERROR SINTACTICO,1
+sin-55-unario-en-argumento.txt,ERROR SINTACTICO,1
+sin-56-parentesis-vacio.txt,ERROR SINTACTICO,1
+sin-57-doble-punto-y-coma.txt,ERROR SINTACTICO,1
+sin-58-identificador-con-guion.txt,ERROR SINTACTICO,1
+sin-59-solo-definiciones.txt,ERROR SINTACTICO,3
+sin-60-unario-mas.txt,ERROR SINTACTICO,1
+sin-61-compuesto-con-espacio.txt,ERROR SINTACTICO,1
+sin-62-doble-asignacion.txt,ERROR SINTACTICO,1
+sin-63-delay-como-argumento.txt,ERROR SINTACTICO,1
+sin-64-println-como-argumento.txt,ERROR SINTACTICO,1
+sin-65-mapa-sin-parentesis.txt,ERROR SINTACTICO,1
+sin-66-numero-pegado-a-identificador.txt,ERROR SINTACTICO,1
+sin-67-hexadecimal.txt,ERROR SINTACTICO,1
+sin-68-nombre-reservado-minuscula.txt,ERROR SINTACTICO,1
+sin-69-mapa-sin-argumentos.txt,ERROR SINTACTICO,1
+sin-70-expresion-corta-al-eof.txt,ERROR SINTACTICO,1
+sin-71-llamada-incompleta-eof.txt,ERROR SINTACTICO,1
+sin-72-parentesis-izq-al-eof.txt,ERROR SINTACTICO,1
+sin-73-comentario-no-anidado.txt,ERROR SINTACTICO,1
+sin-74-tipo-en-medio-de-expresion.txt,ERROR SINTACTICO,1
+sin-75-parentesis-sobrante-en-definicion.txt,ERROR SINTACTICO,1
+sin-76-llave-sobrante-al-final.txt,ERROR SINTACTICO,1
+sin-77-coma-en-expresion.txt,ERROR SINTACTICO,1
+sin-78-pinmode.txt,ERROR SINTACTICO,2
+sin-79-incremento.txt,ERROR SINTACTICO,1
+sin-80-coma-en-declaracion.txt,ERROR SINTACTICO,1
+sin-81-declaracion-con-mas-igual.txt,ERROR SINTACTICO,1
+sin-82-eof-con-blanco-y-comment.txt,ERROR SINTACTICO,1
+sin-83-notacion-exponencial.txt,ERROR SINTACTICO,1

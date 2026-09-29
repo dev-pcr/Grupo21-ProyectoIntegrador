@@ -1,0 +1,10 @@
+archivo,esperado,linea
+valido-01.txt,OK,
+valido-02.txt,OK,
+valido-03.txt,OK,
+lexico-01.txt,ERROR LEXICO,3
+lexico-02.txt,ERROR LEXICO,5
+lexico-03.txt,ERROR LEXICO,8
+sintactico-01.txt,ERROR SINTACTICO,2
+sintactico-02.txt,ERROR SINTACTICO,5
+sintactico-03.txt,ERROR SINTACTICO,4
