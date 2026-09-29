@@ -1,25 +1,32 @@
-# gramatica.txt — Gramática formal del subconjunto de Arduino (C++ para microcontrolador)
+# Docu gramatica.txt — Gramática formal del subconjunto de Arduino (C++ p microcontrolador)
 # Grupo N.º 21 — Compiladores 2026
-# Notación: sección 8.2 del enunciado.
+# Notación de sección 8.2
 # Símbolo inicial: programa (primer no terminal).
 
 # --- Estructura del programa y nivel superior (Apartado C) ---
+# significa: un programa puede tener un elemento ó un programa puede tener varios elementos, agregando uno después de otro.
 programa -> elemento | programa elemento
+# significa: Un elemento puede ser una sentencia O una definición.
 elemento -> sentencia | definicion
 
 # --- Definiciones de setup() y loop() (Apartado D) ---
+# significa: Una definición puede ser un VOID SETUP con paréntesis y llaves que contienen sentencias, O un VOID LOOP con paréntesis y llaves que contienen sentencias
 definicion -> VOID SETUP PARENTESIS_IZQ PARENTESIS_DER LLAVE_IZQ sentencias LLAVE_DER | VOID LOOP PARENTESIS_IZQ PARENTESIS_DER LLAVE_IZQ sentencias LLAVE_DER
 
 # --- Bloque de sentencias (Apartado E) ---
+# significa: Un conjunto de sentencias puede ser una sentencia, O un conjunto de sentencias seguido de otra sentencia
 sentencias -> sentencia | sentencias sentencia
 
 # --- Sentencias individuales (Apartado D) ---
+# Significa: Una sentencia puede ser una declaración, una asignación, o una llamada a sentencia seguida de punto y coma
 sentencia -> declaracion | asignacion | llamada_sentencia PUNTO_Y_COMA
 
 # Declaración de variables: con y sin inicialización
+# Por ejemplo float edad; o float edad = 22.0;
 declaracion -> tipo IDENTIFICADOR PUNTO_Y_COMA | tipo IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
 
 # Asignaciones (=, +=, -=)
+# Por ejemplo edad = 22.0; o edad += 1.0; o edad -= 1.0; 
 asignacion -> IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA | IDENTIFICADOR SUMA_IGUAL expresion PUNTO_Y_COMA | IDENTIFICADOR RESTA_IGUAL expresion PUNTO_Y_COMA
 
 # Tipos de datos del lenguaje
@@ -40,6 +47,8 @@ argumentos -> expresion | argumentos COMA expresion
 
 # --- Expresiones y jerarquía de precedencia (Apartado E) ---
 # Suma y resta (menor precedencia, asociatividad por la izquierda)
+# significado: Una expresión puede ser una expresión + un término, una expresión - un término, o simplemente un término. suma y resta se hacen después que multiplicación y división.
+# Por ejemplo: 5 + 3 - 2
 expresion -> expresion SUMA termino | expresion RESTA termino | termino
 
 # Multiplicación y división (mayor precedencia, asociatividad por la izquierda)
