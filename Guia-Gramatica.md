@@ -40,6 +40,37 @@ elemento -> sentencia | definicion
 ```
 - ¿Por qué `programa elemento`? Porque es la forma estándar de decir: *"un programa puede tener 1 elemento, o muchos elementos uno atrás de otro"*.
 
+#### Explicación detallada con ejemplos:
+
+La regla se define como:
+```text
+programa -> elemento | programa elemento
+```
+
+1. **Caso base (`elemento`)**: El programa más pequeño posible tiene **un solo** elemento.
+2. **Caso recursivo (`programa elemento`)**: Un programa puede ser **otro programa previo** seguido de **un elemento nuevo**.
+
+##### Ejemplos de derivación:
+
+* **Caso 1: Programa con 1 solo elemento** (`x = 5;`)
+  ```text
+  programa -> elemento (x = 5;)
+  ```
+
+* **Caso 2: Programa con 2 elementos** (`int x;` y luego `void setup() {}`)
+  1. `programa -> programa elemento_2` (donde `elemento_2` es `void setup() {}`)
+  2. `programa -> elemento_1` (donde `elemento_1` es `int x;`)
+  * Resultado: `int x; void setup() {}`
+
+* **Caso 3: Programa con 3 elementos** (`int x;`, `void setup() {}`, `void loop() {}`)
+  1. `programa -> programa elemento_3` (`void loop() {}`)
+  2. `programa -> programa elemento_2` (`void setup() {}`)
+  3. `programa -> elemento_1` (`int x;`)
+  * Resultado: `int x; void setup() {} void loop() {}`
+
+> **¿Por qué se escribe así?**  
+> Garantiza que exista **al menos 1 elemento** (no permite programas vacíos) y utiliza **recursividad por la izquierda**, que es el estándar en analizadores sintácticos LR (como Yacc/Bison) para procesar secuencias eficientemente.
+
 ---
 
 ### Nivel 2: Las Definiciones (`setup` y `loop`)
