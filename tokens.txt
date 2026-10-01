@@ -1,12 +1,6 @@
-# tokens.txt — Lista de tokens del lenguaje asignado al Grupo N.º 21
-# Lenguaje fuente: subconjunto de Arduino (C++ para microcontrolador), según el Anexo (apartado B).
-# Notación: sección 8.1 del enunciado. Cada token se escribe en una línea: NOMBRE patrón,
-# donde el patrón es una expresión regular con la sintaxis del módulo re de Python (la que usa PLY).
-# El orden del archivo importa: cuando dos patrones reconocen cadenas de la misma longitud
-# (empate), gana el escrito primero. Por eso las palabras reservadas, los tipos, los booleanos,
-# las constantes y las funciones van ANTES de IDENTIFICADOR: de lo contrario, en "true" o
-# "INPUT_PULLUP" empatarían con el patrón de identificador y perderían.
-# Las líneas que empiezan con # son comentarios y las líneas vacías se ignoran.
+# Docu tokens.txt — Lista de tokens del lenguaje asignado al Grupo N.º 21
+# Lenguaje fuente: subconjunto de Arduino (C++ microcontrolador)
+# Notación: sección 8.1 del enunciado. 
 
 # --- Directivas @ignorar: lo que el analizador descarta antes de buscar tokens ---
 

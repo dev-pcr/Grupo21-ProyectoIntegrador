@@ -1,7 +1,6 @@
 # Docu gramatica.txt — Gramática formal del subconjunto de Arduino (C++ p microcontrolador)
 # Grupo N.º 21 — Compiladores 2026
 # Notación de sección 8.2
-# Símbolo inicial: programa (primer no terminal).
 
 # --- Estructura del programa y nivel superior (Apartado C) ---
 # significa: un programa puede tener un elemento ó un programa puede tener varios elementos, agregando uno después de otro.
