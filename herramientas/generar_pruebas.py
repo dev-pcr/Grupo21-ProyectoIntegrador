@@ -249,6 +249,78 @@ void loop() {
     ("ok-41-muchos-argumentos", "OK", "", "map(1,2,3,4,5,6,7,8,9,10);\n"),
     ("ok-42-identificador-largo", "OK", "", "float aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1 = 1;\n"),
     ("ok-43-definiciones-identicas", "OK", "", "void setup() {\n    map(1);\n}\nvoid setup() {\n    map(1);\n}\n"),
+    # --- Casos de estrés léxico y sintáctico adicionales ---
+    ("ok-44-prefijo-keywords-en-identificador", "OK", "", """\
+float setup_var = 1;
+float loop_count = 2;
+float void_ptr = 3;
+float float_val = 4;
+float boolean_flag = 5;
+float char_code = 6;
+float map_fn = 7;
+float delay_ms = 8;
+float Serial_println_custom = 9;
+"""),
+    ("ok-45-prefijo-constantes-en-identificador", "OK", "", """\
+float HIGH_SPEED = 1;
+float LOW_POWER = 0;
+float INPUT_ANALOG = 2;
+float OUTPUT_PORT = 3;
+float LED_BUILTIN_PIN = 13;
+float INPUT_PULLUP_MODE = 4;
+"""),
+    ("ok-46-identificadores-con-guiones-y-numeros", "OK", "", """\
+float _ = 1;
+float _0 = 2;
+float __temp__ = 3;
+float _123_abc_ = 4;
+"""),
+    ("ok-47-cadenas-extremas", "OK", "", """\
+char c1 = "";
+char c2 = '';
+char c3 = "/* no es comentario */";
+char c4 = '*/';
+char c5 = "int x = 5; ( ) + - * / = ; {} += -=";
+char c6 = '"';
+char c7 = "'";
+"""),
+    ("ok-48-comentarios-patologicos", "OK", "", """\
+/***/
+/***********/
+/* * * * * */
+/* ///// */
+/* a / b */
+/* void setup() loop() float */
+/*1*/float/*2*/x/*3*/=/*4*/10.5;/*5*/
+"""),
+    ("ok-49-anidamiento-profundo-parentesis", "OK", "", "float res = ((((((1 + 2) * 3) - 4) / 5) + 6));\n"),
+    ("ok-50-llamadas-map-profundamente-encadenadas", "OK", "", "float val = map(map(map(map(1, 2), 3), 4), 5);\n"),
+    ("ok-51-mezcla-completa-factores", "OK", "", """\
+float x = (map(a + 1, "hola", true, HIGH) * 3 - (5 / c)) + LED_BUILTIN + LOW + false;
+"""),
+    ("ok-52-definiciones-multiples-y-desordenadas-complejas", "OK", "", """\
+float global1 = 1;
+void loop() {
+    delay(10);
+}
+float global2 = 2;
+void setup() {
+    float local1 = 3;
+}
+void loop() {
+    Serial.println(global1);
+}
+void setup() {
+    global2 += 1;
+}
+delay(global2);
+"""),
+    ("ok-53-decimales-largos-sin-espacios", "OK", "", """\
+float d1 = 0.0000000001;
+float d2 = 123456789.987654321;
+float d3 = 3.14+2.5*10.0/2.0;
+"""),
+
 
     # ------------------------------------------------------------------
     # ERROR LEXICO — el primer carácter que no forma ningún token
@@ -393,6 +465,16 @@ x = y.z;
     # espacio no separable (pegado de Word/Excel): no está en [ \t\r]+
     ("lex-46-espacio-no-separable", "ERROR LEXICO", "2", "map(1);\nx = 1\u00a0;\n"),
     ("lex-47-tab-vertical", "ERROR LEXICO", "1", "x = 1\vy;\n"),
+    ("lex-48-string-multilinea-sin-cerrar", "ERROR LEXICO", "2", 'float x = 1;\nchar c = "texto\nsin cerrar";\n'),
+    ("lex-49-caracter-invalido-ampersand", "ERROR LEXICO", "2", "float x = 1;\nx = a & b;\n"),
+    ("lex-50-caracter-invalido-pipe", "ERROR LEXICO", "2", "float x = 1;\nx = a | b;\n"),
+    ("lex-51-caracter-invalido-tilde", "ERROR LEXICO", "1", "float x = ~1;\n"),
+    ("lex-52-caracter-invalido-circunflejo", "ERROR LEXICO", "1", "float x = 2 ^ 3;\n"),
+    ("lex-53-caracter-invalido-dolar", "ERROR LEXICO", "1", "float $var = 1;\n"),
+    ("lex-54-caracter-invalido-backslash", "ERROR LEXICO", "1", "float x = 1 \\ 2;\n"),
+    ("lex-55-emoji", "ERROR LEXICO", "2", "float x = 1;\nfloat y = 🔥;\n"),
+    ("lex-56-punto-flotante-inicial-sin-digito", "ERROR LEXICO", "1", "float x = .5;\n"),
+
 
     # ------------------------------------------------------------------
     # ERROR SINTACTICO — debe lexear sin error; la línea es la del primer
@@ -531,6 +613,23 @@ x = y.z;
     ("sin-82-eof-con-blanco-y-comment", "ERROR SINTACTICO", "1", "x = 1\n\n/* fin */\n"),
     # no hay notación exponencial: 1e5 son dos piezas pegadas
     ("sin-83-notacion-exponencial", "ERROR SINTACTICO", "1", "float x = 1e5;\n"),
+    # --- Casos de estrés sintáctico adicionales ---
+    ("sin-84-llamada-vacia-println", "ERROR SINTACTICO", "2", "void setup() {\n    Serial.println();\n}\n"),
+    ("sin-85-asignacion-compuesta-inversa-mas", "ERROR SINTACTICO", "2", "float x = 1;\nx =+ 2;\n"),
+    ("sin-86-asignacion-compuesta-inversa-menos", "ERROR SINTACTICO", "2", "float x = 1;\nx =- 2;\n"),
+    ("sin-87-asignacion-multiplicacion-igual", "ERROR SINTACTICO", "1", "x *= 2;\n"),
+    ("sin-88-asignacion-division-igual", "ERROR SINTACTICO", "1", "x /= 2;\n"),
+    ("sin-89-triple-igual", "ERROR SINTACTICO", "1", "x === 1;\n"),
+    ("sin-90-definicion-anidada-loop-en-setup", "ERROR SINTACTICO", "2", "void setup() {\n    void loop() {\n        delay(10);\n    }\n}\n"),
+    ("sin-91-asignacion-en-condicion-de-argumento", "ERROR SINTACTICO", "1", "map(x = 1, 2);\n"),
+    ("sin-92-coma-al-principio-de-argumentos", "ERROR SINTACTICO", "1", "map(, 1, 2);\n"),
+    ("sin-93-doble-coma-en-argumentos", "ERROR SINTACTICO", "1", "map(1,, 2);\n"),
+    ("sin-94-parentesis-desbalanceados-derecha", "ERROR SINTACTICO", "1", "float x = (1 + 2));\n"),
+    ("sin-95-sentencia-delay-como-termino-multiplicativo", "ERROR SINTACTICO", "1", "float x = 5 * delay(100);\n"),
+    ("sin-96-sentencia-println-como-divisor", "ERROR SINTACTICO", "1", "float x = 10 / Serial.println(1);\n"),
+    ("sin-97-void-solo-al-eof", "ERROR SINTACTICO", "1", "void"),
+    ("sin-98-coma-en-declaracion-multiple", "ERROR SINTACTICO", "1", "float a = 1, b = 2;\n"),
+    ("sin-99-bloque-loop-vacio-con-comentarios", "ERROR SINTACTICO", "3", "void loop() {\n    /* comentario pero ninguna sentencia */\n}\n"),
 ]
 
 

@@ -1,0 +1,6 @@
+float HIGH_SPEED = 1;
+float LOW_POWER = 0;
+float INPUT_ANALOG = 2;
+float OUTPUT_PORT = 3;
+float LED_BUILTIN_PIN = 13;
+float INPUT_PULLUP_MODE = 4;

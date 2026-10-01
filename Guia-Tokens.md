@@ -27,7 +27,132 @@ En programación pasa exactamente lo mismo:
 
 ---
 
-## 3. ¿Cómo está armado `tokens.txt` paso a paso?
+## 3. Patrones Regex y Precedencia por Orden (En Profundidad)
+
+Para que el analizador léxico (`PLY / lex`) sepa exactamente cómo trocear el código fuente sin equivocarse, utiliza dos mecanismos fundamentales: **Expresiones Regulares (Regex)** y **Reglas de Resolución de Ambigüedades (Precedencia y Longitud)**.
+
+---
+
+### A. ¿Qué es un Patrón Regex (Expresión Regular)?
+
+Un **patrón regex** es una fórmula o plantilla matemática que describe un conjunto de caracteres válidos para formar un token. Cada vez que el lexer lee el código fuente, prueba estas plantillas sobre el texto para reconocer de qué palabra o símbolo se trata.
+
+#### Elementos clave de Regex utilizados en `tokens.txt`:
+
+| Símbolo | Significado | Ejemplo en el proyecto | ¿Qué reconoce? |
+| :--- | :--- | :--- | :--- |
+| `[a-z]` o `[0-9]` | **Rango / Clase de caracteres:** coincide con cualquier carácter dentro de los límites. | `[0-9]` | Cualquier dígito del 0 al 9 (`0`, `1`, `2`, ... `9`). |
+| `+` | **Una o más repeticiones:** exige que el elemento anterior aparezca al menos una vez. | `[0-9]+` | Un número entero como `5`, `42` o `2026`. (No acepta vacío). |
+| `*` | **Cero o más repeticiones:** el elemento anterior puede no estar o repetirse muchas veces. | `[a-zA-Z0-9_]*` | Cero, una o muchas letras, números o guiones bajos. |
+| `\` | **Escape:** anula el significado especial de un símbolo para tomarlo literal. | `\+`, `\(`, `\.` | El signo de suma literal `+`, paréntesis `(`, o punto literal `.`. |
+| `[^...]` | **Clase negada:** cualquier carácter EXCEPTO los que están adentro. | `[^"\n]*` | Cualquier texto que **no** contenga comillas dobles ni salto de línea. |
+| `\|` | **Unión / O lógico:** coincide con el patrón de la izquierda O con el de la derecha. | `"[^"\n]*"\|'[^'\n]*'` | Una cadena encerrada entre comillas dobles `""` **O** entre comillas simples `''`. |
+| `*?` | **Cuantificador No Voraz (Lazy/Non-Greedy):** se detiene en la primera coincidencia posible. | `/\*[\s\S]*?\*/` | Un comentario de bloque que termina en el **primer** `*/` que encuentre. |
+
+---
+
+#### Desglose de Regex reales de nuestro proyecto (Ejemplos explicados):
+
+#### 1. Identificadores:
+```text
+IDENTIFICADOR [a-zA-Z_][a-zA-Z0-9_]*
+```
+- **`[a-zA-Z_]`**: El primer carácter **debe ser** obligatoriamente una letra (mayúscula o minúscula) o un guion bajo `_`. (No puede empezar con un número).
+- **`[a-zA-Z0-9_]*`**: A partir del segundo carácter, puede tener **cero o más** letras, números o guiones bajos.
+- **Válidos:** `miVariable`, `sensor_1`, `_contador`, `x`.
+- **Inválidos:** `1sensor` (empieza con número), `mi-var` (el guión medio no está en la clase).
+
+#### 2. Números Decimales:
+```text
+DECIMAL [0-9]+\.[0-9]+
+```
+- **`[0-9]+`**: Uno o más dígitos antes del punto (la parte entera).
+- **`\.`**: Un punto literal (escapado con `\`).
+- **`[0-9]+`**: Uno o más dígitos después del punto (la parte decimal).
+- **Válidos:** `3.14`, `0.5`, `100.00`.
+- **Inválidos:** `3.` (falta la parte decimal), `.5` (falta la parte entera).
+
+#### 3. Comentarios de Bloque Ignorados:
+```text
+@ignorar /\*[\s\S]*?\*/
+```
+- **`/\*`**: Empieza con `/*` literal.
+- **`[\s\S]*?`**: Coincide con cualquier carácter del universo (espacios `\s` y no espacios `\S`), pero de forma **no voraz** (`*?`).
+- **`\*/`**: Termina en el primer `*/` que aparezca.
+- **¿Por qué el `?` es vital?** Si pusiéramos `/\*[\s\S]*\*/` (sin `?`), en un código con dos comentarios como `/* uno */ x = 5; /* dos */`, el regex se comería todo desde el primer `/*` hasta el último `*/`, borrando la instrucción `x = 5;`.
+
+---
+
+### B. ¿Qué es la Precedencia por Orden y Resolución de Conflictos?
+
+Cuando el analizador léxico procesa un texto, frecuentemente un mismo fragmento de código puede coincidir con **más de una regla regex**. Para resolver qué token generar, el lexer sigue dos reglas de oro estrictas:
+
+```
+                  ┌─────────────────────────────────────────┐
+                  │          ¿Hay varias reglas             │
+                  │        que coinciden con el texto?      │
+                  └────────────────────┬────────────────────┘
+                                       │
+                                       ▼
+                  ┌─────────────────────────────────────────┐
+                  │ 1. Regla de la Cadena Más Larga         │
+                  │    (Longest Match / Maximal Munch)      │
+                  │    Gana el patrón que abarque MÁS       │
+                  │    caracteres.                          │
+                  └────────────────────┬────────────────────┘
+                                       │
+                          ¿Empatan en longitud?
+                                       │
+                                       ▼
+                  ┌─────────────────────────────────────────┐
+                  │ 2. Precedencia por Orden en tokens.txt  │
+                  │    (First Match / Rule Priority)        │
+                  │    Gana la regla escrita MÁS ARRIBA     │
+                  │    en el archivo tokens.txt             │
+                  └─────────────────────────────────────────┘
+```
+
+---
+
+#### 1. Regla 1: Coincidencia más larga (*Longest Match*)
+
+El lexer siempre intenta "comer" la mayor cantidad posible de caracteres contiguos.
+
+* **Ejemplo 1: `+=` vs `+`**
+  - Tenemos las reglas: `SUMA_IGUAL \+=` y `SUMA \+`.
+  - Si el código tiene `x += 5;`, al llegar a `+=`:
+    - `SUMA` (`\+`) coincide con 1 carácter (`+`).
+    - `SUMA_IGUAL` (`\+=`) coincide con 2 caracteres (`+=`).
+  - **Resultado:** Gana `SUMA_IGUAL` porque es más largo. El lexer emite `SUMA_IGUAL`, en lugar de emitir erróneamente `SUMA` seguido de `IGUAL`.
+
+* **Ejemplo 2: `INPUT_PULLUP` vs `INPUT`**
+  - Tenemos las reglas `INPUT INPUT` e `INPUT_PULLUP INPUT_PULLUP`.
+  - Si el código dice `pinMode(2, INPUT_PULLUP);`:
+    - `INPUT` coincide con 5 caracteres (`INPUT`).
+    - `INPUT_PULLUP` coincide con 12 caracteres (`INPUT_PULLUP`).
+  - **Resultado:** El lexer elige `INPUT_PULLUP` por ser la cadena más larga.
+
+---
+
+#### 2. Regla 2: Precedencia por Orden de Aparición (*First Rule Wins*)
+
+Si dos patrones coinciden exactamente con la **misma cantidad de caracteres**, el desempate se resuelve por el **orden de arriba hacia abajo** en `tokens.txt`. La regla que esté más arriba se queda con el token.
+
+* **El caso crítico: Palabras Reservadas vs. Identificadores**
+  - Consideremos la palabra `setup` o el tipo `float`:
+    - Regla de palabra clave: `SETUP setup` (coincide con los 5 caracteres `setup`).
+    - Regla de identificador: `IDENTIFICADOR [a-zA-Z_][a-zA-Z0-9_]*` (también coincide con los 5 caracteres `setup`).
+  - **Ambas reglas tienen exactamente 5 caracteres de longitud.**
+  - **¿Cómo se resuelve?**
+    - En `tokens.txt`, `SETUP` está en la línea 10 y `IDENTIFICADOR` está al final (línea 80).
+    - **Resultado:** Como `SETUP` aparece antes, el lexer emite el token `SETUP`.
+  - ⚠️ **¿Qué pasaría si pusiéramos `IDENTIFICADOR` arriba de todo?**
+    - Palabras como `setup`, `loop`, `void`, `float`, `true`, `HIGH` coincidirían primero con `IDENTIFICADOR`.
+    - ¡El compilador no reconocería ninguna palabra clave ni tipo del lenguaje, arruinando todo el análisis sintáctico!
+
+---
+
+## 4. ¿Cómo está armado `tokens.txt` paso a paso?
 
 Vamos desde lo más estructural (las directivas) hasta lo más concreto (los tokens).
 
@@ -152,7 +277,7 @@ IDENTIFICADOR [a-zA-Z_][a-zA-Z0-9_]*
 
 ---
 
-## 4. Reglas estrictas que pide la cátedra y que cumplimos al 100%
+## 5. Reglas estrictas que pide la cátedra y que cumplimos al 100%
 
 1. **Orden por longitud (prelongitud):** Cuando un patrón es prefijo de otro (`INPUT` vs `INPUT_PULLUP`, `-` vs `-=`), el más largo va primero o PLY lo resuelve por longitud máxima. En ambos casos, el token correcto gana.
 
@@ -172,7 +297,7 @@ IDENTIFICADOR [a-zA-Z_][a-zA-Z0-9_]*
 
 ---
 
-## 5. ¿Cómo probás que `tokens.txt` funciona?
+## 6. ¿Cómo probás que `tokens.txt` funciona?
 
 Tenés en el proyecto un script automático creado especialmente para verificar la parte léxica:
 
@@ -195,7 +320,7 @@ python herramientas/verificar_lexico.py
 
 ---
 
-## 6. Resumen de comandos útiles para recordar
+## 7. Resumen de comandos útiles para recordar
 
 ```powershell
 # Probar la parte léxica (tu tokens.txt)

@@ -1,0 +1,4 @@
+float _ = 1;
+float _0 = 2;
+float __temp__ = 3;
+float _123_abc_ = 4;

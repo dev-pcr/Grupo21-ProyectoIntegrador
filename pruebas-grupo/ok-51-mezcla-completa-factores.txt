@@ -1,0 +1,1 @@
+float x = (map(a + 1, "hola", true, HIGH) * 3 - (5 / c)) + LED_BUILTIN + LOW + false;

@@ -42,6 +42,16 @@ ok-40-solo-cr.txt,OK,
 ok-41-muchos-argumentos.txt,OK,
 ok-42-identificador-largo.txt,OK,
 ok-43-definiciones-identicas.txt,OK,
+ok-44-prefijo-keywords-en-identificador.txt,OK,
+ok-45-prefijo-constantes-en-identificador.txt,OK,
+ok-46-identificadores-con-guiones-y-numeros.txt,OK,
+ok-47-cadenas-extremas.txt,OK,
+ok-48-comentarios-patologicos.txt,OK,
+ok-49-anidamiento-profundo-parentesis.txt,OK,
+ok-50-llamadas-map-profundamente-encadenadas.txt,OK,
+ok-51-mezcla-completa-factores.txt,OK,
+ok-52-definiciones-multiples-y-desordenadas-complejas.txt,OK,
+ok-53-decimales-largos-sin-espacios.txt,OK,
 lex-01-letra-con-tilde.txt,ERROR LEXICO,2
 lex-02-comilla-doble-sin-cerrar.txt,ERROR LEXICO,3
 lex-03-comilla-simple-sin-cerrar.txt,ERROR LEXICO,2
@@ -89,6 +99,15 @@ lex-44-mayor-que.txt,ERROR LEXICO,1
 lex-45-comillas-mezcladas.txt,ERROR LEXICO,1
 lex-46-espacio-no-separable.txt,ERROR LEXICO,2
 lex-47-tab-vertical.txt,ERROR LEXICO,1
+lex-48-string-multilinea-sin-cerrar.txt,ERROR LEXICO,2
+lex-49-caracter-invalido-ampersand.txt,ERROR LEXICO,2
+lex-50-caracter-invalido-pipe.txt,ERROR LEXICO,2
+lex-51-caracter-invalido-tilde.txt,ERROR LEXICO,1
+lex-52-caracter-invalido-circunflejo.txt,ERROR LEXICO,1
+lex-53-caracter-invalido-dolar.txt,ERROR LEXICO,1
+lex-54-caracter-invalido-backslash.txt,ERROR LEXICO,1
+lex-55-emoji.txt,ERROR LEXICO,2
+lex-56-punto-flotante-inicial-sin-digito.txt,ERROR LEXICO,1
 sin-01-archivo-vacio.txt,ERROR SINTACTICO,1
 sin-02-solo-comentarios.txt,ERROR SINTACTICO,1
 sin-03-bloque-vacio-setup.txt,ERROR SINTACTICO,1
@@ -171,3 +190,19 @@ sin-80-coma-en-declaracion.txt,ERROR SINTACTICO,1
 sin-81-declaracion-con-mas-igual.txt,ERROR SINTACTICO,1
 sin-82-eof-con-blanco-y-comment.txt,ERROR SINTACTICO,1
 sin-83-notacion-exponencial.txt,ERROR SINTACTICO,1
+sin-84-llamada-vacia-println.txt,ERROR SINTACTICO,2
+sin-85-asignacion-compuesta-inversa-mas.txt,ERROR SINTACTICO,2
+sin-86-asignacion-compuesta-inversa-menos.txt,ERROR SINTACTICO,2
+sin-87-asignacion-multiplicacion-igual.txt,ERROR SINTACTICO,1
+sin-88-asignacion-division-igual.txt,ERROR SINTACTICO,1
+sin-89-triple-igual.txt,ERROR SINTACTICO,1
+sin-90-definicion-anidada-loop-en-setup.txt,ERROR SINTACTICO,2
+sin-91-asignacion-en-condicion-de-argumento.txt,ERROR SINTACTICO,1
+sin-92-coma-al-principio-de-argumentos.txt,ERROR SINTACTICO,1
+sin-93-doble-coma-en-argumentos.txt,ERROR SINTACTICO,1
+sin-94-parentesis-desbalanceados-derecha.txt,ERROR SINTACTICO,1
+sin-95-sentencia-delay-como-termino-multiplicativo.txt,ERROR SINTACTICO,1
+sin-96-sentencia-println-como-divisor.txt,ERROR SINTACTICO,1
+sin-97-void-solo-al-eof.txt,ERROR SINTACTICO,1
+sin-98-coma-en-declaracion-multiple.txt,ERROR SINTACTICO,1
+sin-99-bloque-loop-vacio-con-comentarios.txt,ERROR SINTACTICO,3

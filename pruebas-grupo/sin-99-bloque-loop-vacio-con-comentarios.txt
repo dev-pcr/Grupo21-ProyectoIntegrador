@@ -1,0 +1,3 @@
+void loop() {
+    /* comentario pero ninguna sentencia */
+}

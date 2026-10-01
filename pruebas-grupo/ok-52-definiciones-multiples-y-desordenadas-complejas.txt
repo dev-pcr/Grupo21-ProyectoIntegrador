@@ -1,0 +1,15 @@
+float global1 = 1;
+void loop() {
+    delay(10);
+}
+float global2 = 2;
+void setup() {
+    float local1 = 3;
+}
+void loop() {
+    Serial.println(global1);
+}
+void setup() {
+    global2 += 1;
+}
+delay(global2);
