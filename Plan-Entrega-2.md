@@ -49,7 +49,7 @@ El cronograma concentra el esfuerzo en 6 jornadas altamente productivas:
 
 | Fecha | Fase | Tareas Emiliano (Persona 1) | Tareas Pablo (Persona 2) | Hito / Entregable |
 | :--- | :--- | :--- | :--- | :--- |
-| **Jue 22/10** | **Desarrollo Paralelo & Batería IA** | 1. Lectura rápida y codificación de `lexico.py` (`ply.lex`).<br>2. **Documentar y comentar exhaustivamente el código**.<br>3. Generar batería de pruebas léxicas con IA. | 1. Lectura rápida y codificación de `sintactico.py` (`ply.yacc`).<br>2. Definición de precedencias y reglas `p_*`.<br>3. Generar batería de pruebas sintácticas con IA. | `lexico.py`, `sintactico.py` y `compilador.py` funcionales, con código bien comentado |
+| **Jue 22/10** | **Desarrollo Paralelo & Batería IA** | 1. Lectura rápida y codificación de `lexico.py` (`ply.lex`).<br>2. **Documentar y comentar exhaustivamente el código**.<br>3. Generar batería de pruebas léxicas con IA. | 1. Lectura rápida y codificación de `sintactico.py` (`ply.yacc`).<br>2. Reglas `p_*` estratificadas (sin tabla `precedence`) y blindaje EOF.<br>3. Generar batería de pruebas sintácticas con IA. | `lexico.py`, `sintactico.py` y `compilador.py` funcionales, con código bien comentado |
 | **Vie 23/10** | **Testing Cruzado con IA** | 1. **Audita a Pablo**: Ejecuta su batería de pruebas sobre el Sintáctico.<br>2. Redacción de `pruebas/valido.txt` con todas las construcciones comentadas. | 1. **Audita a Emi**: Ejecuta su batería de pruebas sobre el Léxico.<br>2. Redacción de `pruebas/error.txt` y armado de `pruebas/esperado.csv`. | Todos los bugs registrados en `log-de-errores.md` y carpeta `pruebas/` lista |
 | **Sáb 24/10** | **Redacción del Informe Técnico** | Redacción de secciones asignadas en `informe.txt`:<br>- **Sección 2:** Especificación y cambios.<br>- **Sección 4:** Uso de Inteligencia Artificial. | Redacción de secciones asignadas en `informe.txt`:<br>- **Sección 3:** Implementación en PLY y conflictos.<br>- **Sección 5:** Fuentes consultadas. | `informe.txt` completo y revisado cruzadamente |
 | **Dom 25/10** | **Estudio y Práctica de Defensa** | Repaso conceptual de teoría léxica, autómatas y simulación de cambios en vivo sobre el lexer. | Repaso conceptual de teoría sintáctica, tablas LR/LALR y simulación de cambios en vivo sobre la gramática. | Equipo preparado para la defensa oral y modificaciones en vivo |
@@ -65,7 +65,8 @@ El cronograma concentra el esfuerzo en 6 jornadas altamente productivas:
   - Mapeo de tokens idéntico a `tokens.txt`.
   - Diccionario de palabras reservadas (`reserved`) para evitar colisiones con identificadores.
   - Reglas para ignorar espacios/tabs y comentarios multilínea `/* ... */` sumando saltos a `lineno`.
-  - Captura precisa de errores léxicos (`t_error`).
+  - Detección de comentarios de bloque no cerrados (`/*` sin `*/`) como error léxico en la línea de apertura.
+  - Captura precisa de errores léxicos (`t_error`) sin descarte ruidoso, preservando la información para coordinar con `compilador.py`.
 * **Tarea Clave de Documentación:** **Documentar y comentar bien el código del proyecto**:
   - Escribir comentarios claros y explicativos en cada bloque de código de `lexico.py` y `compilador.py`.
   - Documentar las expresiones regulares complejas (patrones de cadenas, números decimales, comentarios).
@@ -77,15 +78,15 @@ El cronograma concentra el esfuerzo en 6 jornadas altamente productivas:
 ### Persona 2: Pablo
 * **Desarrollo:** Responsable principal del analizador sintáctico (`sintactico.py`).
   - Mapeo de reglas gramaticales desde `gramatica.txt` a funciones `p_*` de `ply.yacc`.
-  - Tabla de precedencias de operadores aritméticos (`precedence`) para eliminar ambigüedades.
+  - Traducción fiel de la jerarquía estratificada (`expresion -> termino -> factor`) idéntica al modelo de la cátedra (`calcyacc.py`), sin necesidad de tabla `precedence` externa.
   - Análisis y resolución de conflictos en `parser.out` (0 conflictos shift/reduce o reduce/reduce no justificados).
-  - Manejo de errores en `p_error(p)` identificando tokens inválidos y detección de fin de archivo prematuro (EOF).
+  - Manejo robusto en `p_error(p)` con control explícito de `p is None` ante fin de archivo prematuro (EOF), reportando la línea del último token leído para evitar el bug de `AttributeError` presente en los ejemplos de la cátedra.
 * **Testing:** Diseñar una batería de pruebas con IA para auditar el Lexer de Emiliano.
 * **Casos Propios:** Redacción de `pruebas/error.txt` y armado del archivo `pruebas/esperado.csv`.
 * **Informe:** Redacción de las secciones 3 y 5 de `informe.txt`.
 
 ### Tareas Conjuntas (Pair Programming)
-1. Integración de `compilador.py`: mecanismo para determinar cuál error ocurrió primero en orden de lectura del archivo fuente.
+1. Integración de `compilador.py`: mecanismo para determinar cuál error ocurrió primero en orden de lectura (comparar línea del primer error léxico $L_{lex}$ vs línea del error sintáctico $L_{sint}$; si $L_{lex} \le L_{sint}$ reportar error léxico, sino sintáctico; si no hay errores, `OK`).
 2. Sección 1 del informe (Datos del grupo e integrantes).
 3. Corrida masiva sobre los 208 casos de `pruebas-grupo/`.
 4. Simulación de la defensa oral del 25/10.
@@ -100,7 +101,7 @@ El informe técnico se entregará en texto plano (`informe.txt`) en UTF-8, divid
 | :---: | :--- | :---: | :--- |
 | **1** | **Grupo e Integrantes** | **Emiliano y Pablo** | Número de Grupo (21), nombres completos, rol de cada uno. |
 | **2** | **Especificación** | **Emiliano** | Declarar que no hubo cambios respecto a la Entrega 1 aprobada (100% de éxito en los 39 casos de prueba evaluados). |
-| **3** | **Implementación** | **Pablo** | Cómo se tradujo la gramática a PLY (`ply.yacc`), tabla de precedencias, reporte de conflictos en `parser.out` y decisiones tomadas en la detección y mensajes de error sintáctico. |
+| **3** | **Implementación** | **Pablo** | Cómo se tradujo la gramática a PLY (`ply.yacc`), justificación de la resolución de precedencias por gramática estratificada (evitando tabla `precedence`), reporte de 0 conflictos en `parser.out` y decisiones tomadas en la detección de errores (incluyendo EOF y `p is None`). |
 | **4** | **Uso de Inteligencia Artificial** | **Emiliano** | Cumplimiento estricto de la sección 13 del enunciado: herramientas utilizadas, consultas realizadas, generación de baterías de pruebas, aportes obtenidos y cómo fueron verificados y adaptados por el grupo. |
 | **5** | **Fuentes Consultadas** | **Pablo** | Documentación oficial de PLY 3.11, apuntes teóricos de la cátedra y bibliografía complementaria. |
 
@@ -125,7 +126,7 @@ La sección 9 del enunciado establece que el día de la defensa cada alumno resp
 
 1. **Repaso Teórico Cruzado:**
    - Emi le toma a Pablo: funcionamiento del Lexer, expresiones regulares, tokens vs lexemas, manejo de caracteres no reconocidos.
-   - Pablo le toma a Emi: gramáticas libres de contexto, derivaciones, precedencia de operadores, tipos de conflictos (shift/reduce) y cómo los resuelve Yacc.
+   - Pablo le toma a Emi: gramáticas libres de contexto, derivaciones, precedencia estratificada vs tablas `precedence`, tipos de conflictos (shift/reduce) y resolución de EOF.
 2. **Simulacro de Modificaciones en Vivo:**
    - Ejercicio 1: *"Agreguen un nuevo operador (por ejemplo `%` módulo o `==` igualdad) al lenguaje"*. Ambos practican modificar `tokens.txt`, `lexico.py`, `gramatica.txt` y `sintactico.py` en tiempo real.
    - Ejercicio 2: *"Permitan llamadas a funciones sin argumentos `delay();` o con múltiples sentencias"*.
