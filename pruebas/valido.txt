@@ -1,0 +1,36 @@
+/*
+ * ============================================================================
+ * CASO DE PRUEBA VÁLIDO PROPIO — GRUPO N.º 21
+ * Lenguaje: Subconjunto de Arduino (C++ para microcontrolador)
+ * Responsable: Emiliano (Persona 1)
+ * ============================================================================
+ * Consigna:
+ * Debe ser un programa válido que use TODAS las construcciones del Anexo
+ * (apartado D), con comentarios en estilo C++/Arduino que expliquen qué
+ * construcción es cada parte.
+ * ============================================================================
+ */
+
+// 1. Declaraciones globales de variables (tipos: boolean, char, float) y con/sin inicialización
+// [A COMPLETAR POR EMILIANO]
+
+// 2. Definición del bloque setup()
+// [A COMPLETAR POR EMILIANO]
+
+// 3. Definición del bloque loop()
+// [A COMPLETAR POR EMILIANO]
+
+// 4. Asignaciones simples (=) y compuestas (+=, -=)
+// [A COMPLETAR POR EMILIANO]
+
+// 5. Constantes del lenguaje (HIGH, LOW, INPUT, OUTPUT, INPUT_PULLUP, LED_BUILTIN)
+// [A COMPLETAR POR EMILIANO]
+
+// 6. Expresiones aritméticas jerárquicas (+, -, *, /) y paréntesis
+// [A COMPLETAR POR EMILIANO]
+
+// 7. Llamadas a funciones como sentencia: delay() y Serial.println()
+// [A COMPLETAR POR EMILIANO]
+
+// 8. Llamada a función con retorno: map() (como sentencia y dentro de una expresión)
+// [A COMPLETAR POR EMILIANO]

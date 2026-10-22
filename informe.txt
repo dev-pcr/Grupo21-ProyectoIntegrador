@@ -1,0 +1,69 @@
+================================================================================
+INFORME TÉCNICO — PROYECTO INTEGRADOR (ENTREGA 2: IMPLEMENTACIÓN)
+Compiladores 2026 — Facultad de Ingeniería — UCASAL
+Cátedra: Mg. Lic. Carolina Cardoso / Ing. Miguel N. Tolaba
+Grupo N.º 21: Subconjunto de Arduino (C++ para microcontrolador)
+================================================================================
+
+1. GRUPO E INTEGRANTES
+--------------------------------------------------------------------------------
+Grupo N.º: 21
+Lenguaje Asignado: Subconjunto de Arduino (C++ para microcontrolador)
+
+Integrantes y Roles:
+- Persona 1: Emiliano (Emi)
+  Rol: Responsable principal del Analizador Léxico (lexico.py), pruebas léxicas,
+       documentación de código, redacción de caso valido.txt y secciones 2 y 4.
+- Persona 2: Pablo
+  Rol: Responsable principal del Analizador Sintáctico (sintactico.py), pruebas
+       sintácticas, resolución de conflictos, redacción de error.txt y secciones 3 y 5.
+
+Tareas Conjuntas:
+- Integración del compilador (compilador.py) y algoritmo de prioridad de errores.
+- Pruebas masivas sobre batería de casos y preparación de la defensa oral.
+
+
+2. ESPECIFICACIÓN
+--------------------------------------------------------------------------------
+[Responsable: Emiliano]
+- Declaración de conformidad respecto a la Entrega 1 aprobada (100% de éxito en
+  los 39 casos de evaluación de cátedra).
+- Detalle de que NO hubo modificaciones en tokens.txt ni en gramatica.txt, o en
+  su defecto justificación técnica formal de cualquier ajuste detectado durante
+  la fase de implementación en PLY.
+
+
+3. IMPLEMENTACIÓN
+--------------------------------------------------------------------------------
+[Responsable: Pablo]
+- Traducción de la especificación a PLY (ply.lex y ply.yacc).
+- Estructura de la gramática estratificada: explicación de cómo la jerarquía
+  expresion -> termino -> factor resuelve la precedencia y asociatividad a la
+  izquierda sin requerir tabla precedence externa.
+- Reporte y análisis de conflictos en parser.out (justificación de 0 conflictos).
+- Detección y manejo de errores:
+  * Errores léxicos (caracteres no válidos, control de líneas y comentarios).
+  * Errores sintácticos (tokens no esperados y blindaje ante fin de archivo EOF).
+  * Regla de oro: algoritmo de prioridad del primer error en orden de lectura.
+
+
+4. USO DE INTELIGENCIA ARTIFICIAL
+--------------------------------------------------------------------------------
+[Responsable: Emiliano]
+Cumplimiento estricto de la Sección 13 del enunciado:
+- Herramientas de IA consultadas (asistentes, modelos de lenguaje).
+- Consultas realizadas (diseño de pruebas cruzadas, depuración conceptual de PLY).
+- Generación de baterías de pruebas adicionales y cómo fueron validadas y
+  adaptadas críticamente por el equipo humano.
+- Aportes y reflexiones sobre el rol de la IA en el flujo de desarrollo.
+
+
+5. FUENTES CONSULTADAS
+--------------------------------------------------------------------------------
+[Responsable: Pablo]
+- Documentación oficial de PLY 3.11 (David M. Beazley): https://www.dabeaz.com/ply/ply.html
+- Material teórico y práctico de la cátedra de Compiladores 2026 (UCASAL).
+- Ejemplos provistos por los docentes (calclex.py, calcyacc.py, ej1yacc.py).
+- Bibliografía complementaria (Aho, Lam, Sethi, Ullman — Compiladores: Principios,
+  técnicas y herramientas).
+================================================================================
