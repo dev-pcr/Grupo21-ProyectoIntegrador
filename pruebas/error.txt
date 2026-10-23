@@ -1,18 +1,14 @@
 /*
- * ============================================================================
- * CASO DE PRUEBA CON ERROR PROPIO — GRUPO N.º 21
- * Lenguaje: Subconjunto de Arduino (C++ para microcontrolador)
- * Responsable: Pablo (Persona 2)
- * ============================================================================
- * Consigna:
- * Debe ser un programa con un ÚNICO error (léxico o sintáctico) que NO sea de
- * los del apartado F del Anexo, con un comentario que indique en qué línea está,
- * de qué tipo es y por qué es un error.
- * ============================================================================
- * Línea del error: [A COMPLETAR]
- * Tipo de error:   [ERROR LEXICO o ERROR SINTACTICO]
- * Descripción:     [Explicación de por qué la construcción es inválida]
- * ============================================================================
+ * CASO CON UN UNICO ERROR PROPIO - GRUPO N. 21
+ * Linea del error: 13
+ * Tipo de error:   ERROR SINTACTICO
+ * Motivo: delay() no devuelve valor, por lo que solo puede usarse como
+ *         sentencia y nunca como operando dentro de una expresion.
  */
 
-// [A COMPLETAR POR PABLO: Escribir el programa fuente e introducir el error documentado]
+void setup() {
+  float x = 1.5;
+  x += 2;
+  delay(100);
+  x = 1 + delay(100);
+}

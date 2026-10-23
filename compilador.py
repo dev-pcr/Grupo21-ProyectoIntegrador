@@ -24,6 +24,8 @@ Regla de oro:
     en el orden de lectura del archivo fuente.
     Si L_lex <= L_sint -> se reporta ERROR LEXICO.
     Si L_sint < L_lex  -> se reporta ERROR SINTACTICO.
+    Excepción: si el error sintáctico es un fin de archivo prematuro (EOF),
+    siempre gana el error léxico (el EOF está después de todo el texto).
 ================================================================================
 """
 
@@ -60,9 +62,14 @@ def compilar_codigo(contenido):
 
     # 3. Aplicación estricta de la Regla de Oro (orden de lectura en el archivo)
     if primer_lex and error_sint:
-        # Si ambos componentes detectan errores, gana el que aparece en la línea menor.
-        # Si ocurren en la misma línea (L_lex == L_sint), prevalece el error léxico.
-        if primer_lex['linea'] <= error_sint['linea']:
+        # Si ambos componentes detectan errores, gana el que aparece primero:
+        #  - Error sintáctico por FIN DE ARCHIVO prematuro: el EOF está después de
+        #    cualquier carácter del texto, así que un error léxico siempre lo precede.
+        #    (No se compara por línea: la línea del EOF es la del último token y
+        #    puede ser menor que la del carácter inválido.)
+        #  - Error sintáctico en un token: gana el de menor línea; si ocurren en la
+        #    misma línea (L_lex == L_sint) prevalece el error léxico.
+        if error_sint.get('eof') or primer_lex['linea'] <= error_sint['linea']:
             return f"ERROR LEXICO linea {primer_lex['linea']}: {primer_lex['mensaje']}"
         else:
             return f"ERROR SINTACTICO linea {error_sint['linea']}: {error_sint['mensaje']}"
@@ -87,7 +94,7 @@ def compilar(ruta_archivo):
     """
     if not os.path.exists(ruta_archivo):
         print(f"ERROR: No se encontró el archivo '{ruta_archivo}'")
-        return
+        return 1
 
     try:
         # newline='' para preservar saltos de línea originales (CR, LF, CRLF)
@@ -95,19 +102,25 @@ def compilar(ruta_archivo):
             contenido = f.read()
     except Exception as e:
         print(f"ERROR: No se pudo leer el archivo '{ruta_archivo}': {e}")
-        return
+        return 1
 
     resultado = compilar_codigo(contenido)
     print(resultado)
+    return 0
 
 
 def main():
+    # Salida siempre en UTF-8 (en Windows la consola usa cp1252 por defecto y
+    # corrompería caracteres como la ñ o tildes en los mensajes de error).
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
+
     if len(sys.argv) < 2:
         print("Uso: python3 compilador.py <archivo_fuente.txt>")
         sys.exit(1)
 
     ruta_archivo = sys.argv[1]
-    compilar(ruta_archivo)
+    sys.exit(compilar(ruta_archivo))
 
 
 if __name__ == '__main__':

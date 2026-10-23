@@ -220,15 +220,18 @@ def p_error(p):
     """
     global error_sintactico
     if p is None:
-        # Fin de archivo inesperado
+        # Fin de archivo inesperado. La marca 'eof' permite a compilador.py saber
+        # que este error está después de cualquier carácter del texto.
         error_sintactico = {
             'linea': ultimo_token_lineno,
+            'eof': True,
             'mensaje': "fin de archivo prematuro inesperado"
         }
     else:
         # Token inesperado
         error_sintactico = {
             'linea': p.lineno,
+            'eof': False,
             'token': p.value,
             'mensaje': f"se encontro '{p.value}' no esperado"
         }
