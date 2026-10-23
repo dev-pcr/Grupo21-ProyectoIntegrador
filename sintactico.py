@@ -228,10 +228,12 @@ def p_error(p):
             'mensaje': "fin de archivo prematuro inesperado"
         }
     else:
-        # Token inesperado
+        # Token inesperado. 'posicion' (índice absoluto en el texto) permite a
+        # compilador.py decidir el orden de lectura frente a un error léxico.
         error_sintactico = {
             'linea': p.lineno,
             'eof': False,
+            'posicion': p.lexpos,
             'token': p.value,
             'mensaje': f"se encontro '{p.value}' no esperado"
         }

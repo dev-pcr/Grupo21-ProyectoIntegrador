@@ -14,6 +14,9 @@ float temperatura = 25.5;
 float contador;
 boolean bandera;
 char texto = "hola";
+/* 1.1 char sin inicializar e identificador con guion bajo, letras y digitos */
+char inicial;
+float _sensor_1 = 0.5;
 
 /* 2. Asignaciones al nivel superior: simple (=), compuesta (+=) y compuesta (-=) */
 contador = 0;

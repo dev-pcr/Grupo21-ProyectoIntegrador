@@ -441,7 +441,8 @@ x = y.z;
     ("lex-31-triple-comilla", "ERROR LEXICO", "2", 'map(1);\nx = """;\n'),
     ("lex-32-corchete-cierre", "ERROR LEXICO", "2", "map(1);\nx = ];\n"),
     # la comilla escapada cierra la cadena (no hay escapes): queda otra sin cerrar
-    ("lex-33-comilla-escapada", "ERROR LEXICO", "1", "x = \"a\\\"b\";\n"),
+    # (la sentencia restante `x = "a\" + b ;` es válida: el único error es el léxico)
+    ("lex-33-comilla-escapada", "ERROR LEXICO", "1", "x = \"a\\\" + b\";\n"),
     # el ignorar es [ \\t\\r]+: el form feed no se descarta
     ("lex-34-form-feed", "ERROR LEXICO", "1", "x = 1\f;\n"),
     # error en una línea de dos dígitos
@@ -461,7 +462,8 @@ x = y.z;
     ("lex-43-menor-que", "ERROR LEXICO", "2", "map(1);\nx = 1 < 2;\n"),
     ("lex-44-mayor-que", "ERROR LEXICO", "1", "x = a > b;\n"),
     # cadena que cierra, identificador y comilla que queda sin cerrar
-    ("lex-45-comillas-mezcladas", "ERROR LEXICO", "1", "'abc'def'\n"),
+    # (sin la comilla, `x = 'abc' + def ;` es válida: el único error es el léxico)
+    ("lex-45-comillas-mezcladas", "ERROR LEXICO", "1", "x = 'abc' + def';\n"),
     # espacio no separable (pegado de Word/Excel): no está en [ \t\r]+
     ("lex-46-espacio-no-separable", "ERROR LEXICO", "2", "map(1);\nx = 1\u00a0;\n"),
     ("lex-47-tab-vertical", "ERROR LEXICO", "1", "x = 1\vy;\n"),
