@@ -210,6 +210,24 @@
 > - **Etapa Sintáctica (esta entrega):** Valida únicamente que la estructura `factor operador factor` sea correcta. Expresiones como `HIGH + "hola"` son sintácticamente válidas.
 > - **Etapa Semántica (futuras entregas):** Es la encargada de verificar compatibilidad de tipos de datos y marcar error si las operaciones carecen de sentido semántico.
 
+---
+
+> **Fecha:**
+> 2026-10-22.
+> **Persona:**
+> Pablo
+>
+> **Titulo:**
+> ¿Qué es EOF y por qué se controla con `ultimo_token_lineno` en `sintactico.py`?
+>
+> **Asunto:**
+> Definición conceptual de EOF (End Of File) en compiladores y cuál es el motivo técnico de usar la variable auxiliar `ultimo_token_lineno` ante un fin de archivo inesperado en PLY.
+>
+> **Respuesta:**
+> - **Definición de EOF:** Significa *End Of File* (Fin de Archivo). Es la marca o condición que indica que el analizador terminó de leer todo el texto del archivo fuente y ya no quedan más tokens por procesar.
+> - **El problema en PLY (`ply.yacc`):** Cuando el archivo termina "antes de tiempo" y la gramática aún requería más elementos (por ejemplo, falta cerrar una llave `}` o falta un `;` al final), PLY invoca a la función de error pasando `p_error(p)` con **`p = None`**, ya que no existe un token físico al cual asociar el error. Si el código intenta acceder a `p.lineno` directamente (como ocurre en los ejemplos base de la cátedra), el programa explota con un `AttributeError: 'NoneType' object has no attribute 'lineno'`.
+> - **Solución implementada:** Se utiliza la variable auxiliar `ultimo_token_lineno` (actualizada continuamente por el adaptador `TrackingLexer`). Cuando se detecta `p is None`, se reporta la línea del último token real leído antes del corte, permitiendo informar la línea exacta del error sintáctico (ej. en `sin-14`, `sin-53`, `sin-82`) sin que la ejecución falle.
+
 
 
 
