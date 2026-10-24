@@ -15,12 +15,33 @@ Integrantes y Roles:
 
 2. ESPECIFICACIÓN
 --------------------------------------------------------------------------------
-[Responsable: Emiliano]
-- Declaración de conformidad respecto a la Entrega 1 aprobada (100% de éxito en
-  los 39 casos de evaluación de cátedra).
-- Detalle de que NO hubo modificaciones en tokens.txt ni en gramatica.txt, o en
-  su defecto justificación técnica formal de cualquier ajuste detectado durante
-  la fase de implementación en PLY.
+2.1. Conformidad respecto a la Entrega 1 aprobada
+La especificación formal del lenguaje (léxico y gramática libre de contexto)
+presentada en la Entrega 1 fue evaluada por la cátedra y aprobada con el 100% de
+éxito, superando de manera exacta los 39 casos de prueba oficiales (9 casos
+públicos provistos en el repositorio y 30 casos de evaluación no publicados de la
+cátedra).
+
+2.2. Inalterabilidad de tokens.txt y gramatica.txt
+Se declara formalmente que NO se realizaron modificaciones en los archivos
+tokens.txt ni gramatica.txt con respecto a la Entrega 1 aprobada. Ambos archivos
+permanecen idénticos a los entregados y validados:
+  - tokens.txt conserva la totalidad de las 34 categorías léxicas, sus patrones
+    expresados mediante expresiones regulares canónicas, las directivas de
+    ignorado (@ignorar para espacios y comentarios) y el orden estricto de
+    desempate por longitud y precedencia textual.
+  - gramatica.txt conserva la estructura formal en BNF extendido, las 15 reglas
+    de producción jerárquica libre de contexto, el símbolo inicial "programa" y
+    la estratificación en niveles (expresion -> termino -> factor) para el
+    manejo no ambiguo de operadores aritméticos.
+
+2.3. Transición directa a la fase de implementación
+La rigurosidad y precisión técnica alcanzadas en la fase de especificación
+permitieron una traslación directa, sistemática e isomórfica hacia los módulos de
+implementación (ply.lex en lexico.py y ply.yacc en sintactico.py). Al no
+requerirse modificaciones ni adiciones a la especificación aprobada, se aseguró
+la total coherencia matemática entre el diseño teórico formal y el código
+ejecutable en Python.
 
 
 3. IMPLEMENTACIÓN
@@ -129,13 +150,77 @@ de lectura del archivo. Para satisfacer esta regla de oro:
 
 4. USO DE INTELIGENCIA ARTIFICIAL
 --------------------------------------------------------------------------------
-[Responsable: Emiliano]
-Cumplimiento estricto de la Sección 13 del enunciado:
-- Herramientas de IA consultadas (asistentes, modelos de lenguaje).
-- Consultas realizadas (diseño de pruebas cruzadas, depuración conceptual de PLY).
-- Generación de baterías de pruebas adicionales y cómo fueron validadas y
-  adaptadas críticamente por el equipo humano.
-- Aportes y reflexiones sobre el rol de la IA en el flujo de desarrollo.
+En estricto cumplimiento con la Sección 13 del enunciado del Proyecto Integrador,
+se detalla la utilización de herramientas de Inteligencia Artificial (IA) durante
+el ciclo de desarrollo. La IA fue empleada exclusivamente como recurso de
+consulta conceptual, generación de casos de prueba adversarios y apoyo en el
+análisis de comportamiento, manteniendo en todo momento el control, auditoría,
+comprensión y diseño final a cargo de los integrantes del grupo.
+
+4.1. Herramientas empleadas
+- Asistentes de inteligencia artificial y modelos de lenguaje avanzados:
+  Claude Sonnet 5.5 (Anthropic) y Gemini 3.8 Flash (Google), utilizados a través
+  de interfaces de desarrollo asistido para consultas teóricas sobre la
+  biblioteca PLY y generación automatizada de datos de prueba.
+
+4.2. Consultas, finalidades, aportes y verificación crítica humana
+
+a) Generación de baterías de pruebas adversarias y casos límite
+   - Consulta: Asistencia en la formulación automatizada de secuencias de código
+     complejas y casos de estrés en el subconjunto de Arduino.
+   - Finalidad: Ampliar drásticamente la cobertura de pruebas sobre el analizador
+     léxico y sintáctico más allá de los casos públicos, evaluando situaciones
+     extremas (anidamiento de expresiones, delimitadores truncos, caracteres
+     fuera de norma ASCII, comentarios multilínea no cerrados, manejo de BOM).
+   - Resultado obtenido: Generación de scripts auxiliares y más de 200 casos de
+     prueba que conformaron la suite masiva de "pruebas-grupo/".
+   - Verificación y adaptación humana: El equipo auditó manualmente cada caso
+     generado contra la especificación formal del Anexo. Se detectaron y
+     corrigieron casos donde la IA asumía comportamientos no especificados (por
+     ejemplo, en los casos de comillas mezcladas lex-33 y lex-45 documentados en
+     el log de errores), adaptando los archivos fuente y ajustando los valores
+     esperados para cumplir estrictamente con los criterios de la cátedra.
+
+b) Diagnóstico conceptual de mecánicas internas de PLY (ply.lex)
+   - Consulta: Consulta técnica sobre la precedencia interna de evaluación en
+     ply.lex cuando coexisten reglas definidas mediante funciones ("def t_*") y
+     reglas definidas mediante cadenas literales ("t_* = r'...'").
+   - Finalidad: Diagnosticar un fallo imprevisto detectado en 18 casos de prueba,
+     donde la llamada "Serial.println" era partida erróneamente por el lexer
+     como un IDENTIFICADOR "Serial" seguido de un carácter '.' ilegal.
+   - Resultado obtenido: Comprensión teórica del modelo de PLY: las funciones se
+     evalúan con prioridad absoluta antes que las cadenas, sin importar la
+     longitud del patrón.
+   - Verificación y adaptación humana: El grupo validó esta explicación
+     contrastándola con el código fuente y manual oficial de PLY 3.11, diseñó la
+     solución transformando t_SERIAL_PRINTLN en una función ubicada antes de
+     t_IDENTIFICADOR, y registró el problema y su solución en log-de-errores.md,
+     logrando el 100% de éxito en la suite.
+
+c) Diseño del algoritmo de desempate y la Regla de Oro (compilador.py)
+   - Consulta: Consulta metodológica para implementar el criterio de la sección
+     7.2 ("reportar el primer error en el orden de lectura") ante la presencia
+     simultánea de errores léxicos y sintácticos.
+   - Finalidad: Definir una arquitectura limpia para que ambos analizadores
+     cooperen sin interferencias (sin prints prematuros en consola) y permitan
+     un desempate exacto ante casos sutiles (como errores sintácticos y léxicos
+     en la misma línea o terminaciones prematuras por EOF).
+   - Resultado obtenido: Sugerencia conceptual de comparar posiciones absolutas
+     de caracteres (lexpos) y encapsular el seguimiento de tokens en un lexer
+     adaptador.
+   - Verificación y adaptación humana: Los integrantes implementaron la clase
+     TrackingLexer en sintactico.py, definieron la recolección pasiva de errores
+     en lexico.py (t_error acumulativo), y estructuraron el árbitro central en
+     compilador.compilar_codigo, verificándolo mediante una batería de 154
+     micro-pruebas de regresión escritas y validadas por el equipo.
+
+4.3. Reflexión crítica sobre el rol de la IA
+La IA actuó como una herramienta de aceleración productiva y un interlocutor
+técnico calificado para el contraste de ideas. Sin embargo, su aporte requirió
+un filtro humano constante y riguroso: sin el dominio cabal de la teoría de
+compiladores (autómatas, gramáticas libres de contexto, parsers LALR) y sin una
+auditoría crítica permanente, los sesgos y suposiciones erróneas del modelo
+habrían introducido inconsistencias en la entrega.
 
 
 5. FUENTES CONSULTADAS

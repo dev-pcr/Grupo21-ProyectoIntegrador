@@ -228,6 +228,25 @@
 > - **El problema en PLY (`ply.yacc`):** Cuando el archivo termina "antes de tiempo" y la gramática aún requería más elementos (por ejemplo, falta cerrar una llave `}` o falta un `;` al final), PLY invoca a la función de error pasando `p_error(p)` con **`p = None`**, ya que no existe un token físico al cual asociar el error. Si el código intenta acceder a `p.lineno` directamente (como ocurre en los ejemplos base de la cátedra), el programa explota con un `AttributeError: 'NoneType' object has no attribute 'lineno'`.
 > - **Solución implementada:** Se utiliza la variable auxiliar `ultimo_token_lineno` (actualizada continuamente por el adaptador `TrackingLexer`). Cuando se detecta `p is None`, se reporta la línea del último token real leído antes del corte, permitiendo informar la línea exacta del error sintáctico (ej. en `sin-14`, `sin-53`, `sin-82`) sin que la ejecución falle.
 
+---
+
+> **Fecha:**
+> 2026-10-22.
+> **Persona:**
+> Emiliano
+>
+> **Titulo:**
+> Precedencia interna en PLY: colisión entre `t_SERIAL_PRINTLN` y `t_IDENTIFICADOR`
+>
+> **Asunto:**
+> Al procesar `Serial.println(...)` en la batería de pruebas, PLY partía el lexema reconociendo `Serial` como identificador y el punto `.` como un carácter inválido. ¿Por qué ocurrió si el patrón de `Serial.println` es más largo que el de un identificador?
+>
+> **Respuesta:**
+> - **El modelo de precedencia de `ply.lex`:** A diferencia de la especificación abstracta de `tokens.txt` (donde desempata la coincidencia más larga sobre el texto), en PLY las reglas definidas mediante funciones (`def t_*`) tienen **prioridad absoluta** sobre las reglas definidas como cadenas (`t_* = '...'`).
+> - **Causa del conflicto:** `t_IDENTIFICADOR` estaba implementado como función para consultar el diccionario de palabras reservadas (`reserved`), mientras que `t_SERIAL_PRINTLN` era una cadena estática. Debido a esto, PLY evaluaba primero la función del identificador, reconociendo `Serial` de forma prematura.
+> - **Solución implementada:** Se transformó `t_SERIAL_PRINTLN` en una función (`def t_SERIAL_PRINTLN(t):`) y se posicionó en `lexico.py` estrictamente antes de `def t_IDENTIFICADOR(t)`. Al ser ambas funciones, PLY respeta el orden secuencial de aparición en el código fuente, garantizando el emparejamiento prioritario y atómico de la llamada.
+
+
 
 
 
