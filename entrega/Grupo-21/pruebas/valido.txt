@@ -1,0 +1,78 @@
+/*
+ * ============================================================================
+ * CASO DE PRUEBA VALIDO PROPIO - GRUPO N. 21
+ * Lenguaje: Subconjunto de Arduino (C++ para microcontrolador)
+ * Usa TODAS las construcciones del Anexo (apartado D).
+ * Resultado esperado: OK
+ * ============================================================================
+ */
+
+/* 1. Declaraciones globales de variable: con y sin inicializacion, los 3 tipos */
+boolean activo = true;
+char letra = 'a';
+float temperatura = 25.5;
+float contador;
+boolean bandera;
+char texto = "hola";
+/* 1.1 char sin inicializar e identificador con guion bajo, letras y digitos */
+char inicial;
+float _sensor_1 = 0.5;
+
+/* 2. Asignaciones al nivel superior: simple (=), compuesta (+=) y compuesta (-=) */
+contador = 0;
+contador += 1;
+contador -= 1;
+
+/* 3. Definicion de setup(): se ejecuta una vez */
+void setup() {
+  /* 3.1 Declaracion de variable local, sin y con inicializacion */
+  float local;
+  float otra = 3.25;
+
+  /* 3.2 Constantes predefinidas como operando de una asignacion */
+  bandera = HIGH;
+  bandera = LOW;
+  bandera = INPUT;
+  bandera = OUTPUT;
+  bandera = INPUT_PULLUP;
+  bandera = LED_BUILTIN;
+
+  /* 3.3 Booleanos literales */
+  activo = false;
+  activo = true;
+
+  /* 3.4 Llamada a funcion sin valor, usada como sentencia: Serial.println */
+  Serial.println("iniciando");
+  Serial.println('modo simple', 42, otra);
+}
+
+/* 4. Definicion de loop(): se repite indefinidamente */
+void loop() {
+  /* 4.1 Expresiones aritmeticas: + - * / con precedencia y asociatividad izquierda */
+  contador = 1 + 2 * 3 - 4 / 2;
+  contador = (1 + 2) * (3 - 4) / 2;
+  contador += temperatura * 2 + letra;
+  contador -= (temperatura - 1) / 3;
+
+  /* 4.2 Funcion con valor map(): como sentencia */
+  map(contador, 0, 1023, 0, 255);
+
+  /* 4.3 Funcion con valor map(): como operando dentro de una expresion */
+  contador = map(contador, 0, 1023, 0, 255) + 1;
+  contador = 2 * map(map(contador, 0, 10, 0, 100), 0, 100, 0, 1);
+
+  /* 4.4 Funcion sin valor delay(): sentencia, con una expresion como argumento */
+  delay(1000);
+  delay(contador * 2 + 10);
+
+  /* 4.5 Serial.println con una llamada a map() dentro de los argumentos */
+  Serial.println("valor", map(contador, 0, 255, 0, 100));
+}
+
+/* 5. Definiciones repetidas y en cualquier orden: se admiten varias */
+void setup() {
+  boolean otro = false;
+}
+
+/* 6. Sentencia final a nivel superior, despues de las definiciones */
+delay(1);

@@ -1,0 +1,14 @@
+/*
+ * CASO CON UN UNICO ERROR PROPIO - GRUPO N. 21
+ * Linea del error: 13
+ * Tipo de error:   ERROR SINTACTICO
+ * Motivo: delay() no devuelve valor, por lo que solo puede usarse como
+ *         sentencia y nunca como operando dentro de una expresion.
+ */
+
+void setup() {
+  float x = 1.5;
+  x += 2;
+  delay(100);
+  x = 1 + delay(100);
+}

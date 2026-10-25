@@ -8,237 +8,225 @@ Grupo N.º 21: Subconjunto de Arduino (C++ para microcontrolador)
 1. INTEGRANTES
 --------------------------------------------------------------------------------
 Grupo N.º: 21
-Integrantes y Roles:
+Integrantes:
 - Emiliano Aguirre, DNI: 45.770.631
 - Pablo Celaya, DNI: 45.115.839
 
 
 2. ESPECIFICACIÓN
 --------------------------------------------------------------------------------
-2.1. Conformidad respecto a la Entrega 1 aprobada
-La especificación formal del lenguaje (léxico y gramática libre de contexto)
-presentada en la Entrega 1 fue evaluada por la cátedra y aprobada con el 100% de
-éxito, superando de manera exacta los 39 casos de prueba oficiales (9 casos
-públicos provistos en el repositorio y 30 casos de evaluación no publicados de la
-cátedra).
+2.1. Estado de la Entrega 1
+Nuestra especificación formal del lenguaje (tokens.txt y gramatica.txt) fue
+evaluada y aprobada por la cátedra con el 100% de los casos (superando tanto los
+9 casos públicos del repositorio como los 30 casos de evaluación no publicados).
 
-2.2. Inalterabilidad de tokens.txt y gramatica.txt
-Se declara formalmente que NO se realizaron modificaciones en los archivos
-tokens.txt ni gramatica.txt con respecto a la Entrega 1 aprobada. Ambos archivos
-permanecen idénticos a los entregados y validados:
-  - tokens.txt conserva la totalidad de las 34 categorías léxicas, sus patrones
-    expresados mediante expresiones regulares canónicas, las directivas de
-    ignorado (@ignorar para espacios y comentarios) y el orden estricto de
-    desempate por longitud y precedencia textual.
-  - gramatica.txt conserva la estructura formal en BNF extendido, las 15 reglas
-    de producción jerárquica libre de contexto, el símbolo inicial "programa" y
-    la estratificación en niveles (expresion -> termino -> factor) para el
-    manejo no ambiguo de operadores aritméticos.
+2.2. Cambios respecto a la Entrega 1
+No realizamos ningún cambio en tokens.txt ni en gramatica.txt para esta Entrega 2.
+Ambos archivos se entregan exactamente iguales a como fueron aprobados en la
+primera etapa:
+  - tokens.txt conserva las 34 categorías de tokens, las directivas @ignorar para
+    espacios en blanco y comentarios de bloque /* ... */, y las expresiones
+    regulares correspondientes a cada componente léxico.
+  - gramatica.txt conserva las 18 reglas de no terminales en formato libre de
+    contexto, con el símbolo inicial "programa" y la jerarquía de expresiones
+    (expresion -> termino -> factor) para resolver la precedencia y la
+    asociatividad de los operadores aritméticos sin ambigüedades.
 
-2.3. Transición directa a la fase de implementación
-La rigurosidad y precisión técnica alcanzadas en la fase de especificación
-permitieron una traslación directa, sistemática e isomórfica hacia los módulos de
-implementación (ply.lex en lexico.py y ply.yacc en sintactico.py). Al no
-requerirse modificaciones ni adiciones a la especificación aprobada, se aseguró
-la total coherencia matemática entre el diseño teórico formal y el código
-ejecutable en Python.
+2.3. Paso a la implementación
+Como la especificación de la Entrega 1 ya cubría de forma completa y correcta
+todas las construcciones del subconjunto de Arduino asignado, pudimos pasar
+directo a la implementación en Python (el lexer en lexico.py con ply.lex y el
+parser en sintactico.py con ply.yacc) trasladando las reglas tal cual fueron
+aprobadas, sin necesidad de agregar o modificar nada.
 
 
 3. IMPLEMENTACIÓN
 --------------------------------------------------------------------------------
 
-3.1. Traducción de la especificación a PLY (ply.yacc y ply.lex)
-La implementación del analizador sintáctico se llevó a cabo en el módulo
-sintactico.py utilizando la herramienta ply.yacc de la biblioteca PLY 3.11.
-La gramática formal libre de contexto definida en gramatica.txt fue traducida
-de manera directa a funciones de Python precedidas por el prefijo "p_". En cada
-una de estas funciones, la regla sintáctica se define formalmente en su docstring
-y el cuerpo de la función consta exclusivamente de la sentencia "pass". Esto se
-debe a que el proyecto requiere un analizador y reconocedor sintáctico estricto
-que valide la corrección del programa y detecte errores, sin necesidad de
-construir árboles de sintaxis abstracta (AST) ni evaluar expresiones.
+3.1. Traducción de la especificación a PLY (lexico.py y sintactico.py)
+Para implementar el compilador usamos Python 3 y la biblioteca PLY 3.11.
 
-El símbolo inicial de la gramática es "programa", asociado a la primera función
-p_programa definida en el código. Los terminales utilizados en todas las reglas
-corresponden de manera exacta a los nombres de los tokens definidos y exportados
-por el analizador léxico (lexico.py).
+- En lexico.py:
+  Implementamos los 34 tokens del lenguaje. Para las palabras reservadas (setup,
+  loop, void), los tipos de datos (boolean, char, float), los booleanos (true,
+  false), las constantes (HIGH, LOW, INPUT, OUTPUT, INPUT_PULLUP, LED_BUILTIN) y
+  las funciones (map, delay) usamos un diccionario 'reserved' que se consulta
+  dentro de la función t_IDENTIFICADOR. De esta manera evitamos que identificadores
+  válidos como "mapa", "loop1" o "float_val" se confundan con palabras reservadas.
+  Además, definimos t_SERIAL_PRINTLN como una función ubicada antes de
+  t_IDENTIFICADOR para que PLY reconozca la llamada compuesta completa y no
+  separe "Serial" como identificador y el punto como error léxico.
+  Los comentarios de bloque /* ... */ se descartan sumando los saltos de línea al
+  contador interno del lexer (lineno) para mantener siempre el número de línea
+  correcto.
 
-3.2. Gramática estratificada y resolución de precedencia
-Para el análisis de expresiones aritméticas se descartó conscientemente el uso
-de la tabla externa "precedence" provista por PLY. En su lugar, se implementó
-una gramática estratificada en tres niveles jerárquicos de no terminales
-(expresion, termino y factor), adoptando la técnica formal canónica vista en la
-materia y reflejada en el ejemplo "calcyacc.py" de la cátedra:
+- En sintactico.py:
+  Tradujimos las 18 reglas de gramatica.txt a funciones de Python con el prefijo
+  "p_". Cada función define su regla gramatical en el docstring y su cuerpo tiene
+  únicamente "pass", ya que el requerimiento de la cátedra es reconocer si el
+  programa es correcto o detectar errores sintácticos, sin construir árboles
+  AST ni evaluar expresiones.
+  El símbolo inicial de la gramática es "programa" (primera regla definida) y
+  todos los terminales coinciden exactamente con los tokens de lexico.py.
 
-  - expresion -> expresion SUMA termino
-               | expresion RESTA termino
-               | termino
+3.2. Precedencia y asociatividad de operadores
+Para las expresiones aritméticas no usamos la tabla externa 'precedence' de PLY.
+En su lugar, usamos una gramática estratificada en tres niveles jerárquicos, tal
+como vimos en la materia y en el ejemplo calcyacc.py de la cátedra:
 
-  - termino   -> termino MULTIPLICACION factor
-               | termino DIVISION factor
-               | factor
+  - expresion -> expresion SUMA termino | expresion RESTA termino | termino
+  - termino   -> termino MULTIPLICACION factor | termino DIVISION factor | factor
+  - factor    -> IDENTIFICADOR | numero | llamada_valor | CADENA | booleano
+               | constante | PARENTESIS_IZQ expresion PARENTESIS_DER
 
-  - factor    -> IDENTIFICADOR | ENTERO | DECIMAL | CADENA | booleano
-               | constante | llamada_valor | PARENTESIS_IZQ expresion PARENTESIS_DER
+Esta estructura asegura dos propiedades clave:
+1. Precedencia: Multiplicación y división residen en un nivel más profundo
+   (termino), por lo que se reducen antes que la suma y la resta (expresion).
+   Los paréntesis están en la regla factor, lo que permite reiniciar la
+   jerarquía de cálculo cuando sea necesario.
+2. Asociatividad a la izquierda: La recursión a la izquierda (por ejemplo,
+   expresion -> expresion RESTA termino) garantiza que "10 - 4 - 2" se agrupe
+   como "(10 - 4) - 2" y no como "10 - (4 - 2)".
 
-Esta estructura garantiza dos propiedades fundamentales por diseño:
-1. Precedencia de operadores: Los operadores con mayor prioridad (* y /) residen
-   en un nivel más profundo de la gramática (termino), provocando que sus
-   reducciones ocurran antes en el árbol de análisis sintáctico que las sumas
-   y restas (expresion). Los paréntesis "(" y ")" se alojan en el nivel de
-   factor, lo que permite agrupar subexpresiones y reiniciar la jerarquía sin
-   ambigüedad alguna.
-2. Asociatividad hacia la izquierda: La recursión a la izquierda presente en las
-   reglas (por ejemplo, expresion -> expresion RESTA termino) impone que una
-   expresión como "10 - 4 - 2" se asocie y reduzca como "(10 - 4) - 2" y no como
-   "10 - (4 - 2)".
-
-3.3. Reporte y justificación de 0 conflictos en parser.out
-PLY genera un autómata ascendente LALR(1) con un único token de anticipación
-(lookahead). Para verificar la consistencia matemática de la gramática, se creó
-la función sintactico.auditar_conflictos(), la cual fuerza la construcción del
-parser con "debug=True" y genera el reporte detallado parser.out.
-
-Al auditar la tabla de estados y transiciones resultante, se verificó:
+3.3. Reporte de 0 conflictos en parser.out
+Al generar la tabla LALR(1) con debug=True y revisar el archivo parser.out
+(función sintactico.auditar_conflictos()), comprobamos el siguiente resultado:
   - Conflictos shift/reduce: 0
   - Conflictos reduce/reduce: 0
+Esto confirma formalmente que la gramática no tiene ambigüedades y que el
+comportamiento del parser es siempre determinista.
 
-Este resultado formal demuestra que la gramática no contiene ambigüedades,
-garantizando un comportamiento determinista ante cualquier programa fuente.
+3.4. Detección y manejo de errores sintácticos
+En sintactico.py los errores se capturan en la función p_error(p):
+1. Token inesperado (p is not None): Obtenemos el número de línea (p.lineno),
+   la posición absoluta de caracteres en el texto (p.lexpos) y generamos un
+   mensaje descriptivo indicando qué se encontró (por ejemplo, "se encontro
+   'delay' no esperado").
+2. Fin de archivo prematuro / EOF (p is None): Cuando el código se corta de
+   golpe antes de cerrar un bloque o una sentencia, PLY pasa p = None. Para
+   evitar que el programa falle con AttributeError al intentar leer p.lineno,
+   implementamos la clase TrackingLexer, que envuelve al lexer y memoriza la
+   línea del último token entregado al parser. Ante un EOF, informamos la línea
+   de ese último token (o la línea 1 si el archivo estaba completamente vacío o
+   con solo comentarios), cumpliendo estrictamente con la sección 7.2.
+3. Ante el primer error lanzamos una excepción para interrumpir el análisis de
+   inmediato, ya que la cátedra no pide recuperación de múltiples errores.
 
-3.4. Detección y manejo robusto de errores sintácticos
-La captura de anomalías se realiza en la función p_error(p). Ante el primer token
-inválido, se registra la información del error y se interrumpe de inmediato el
-análisis mediante el lanzamiento de una excepción controlada (SyntaxError),
-evitando rutinas de recuperación ruidosas o erráticas.
-
-Se implementaron soluciones específicas para dos problemáticas críticas:
-1. Blindaje ante fin de archivo prematuro (EOF):
-   Cuando un archivo finaliza de forma incompleta (por ejemplo, bloques sin
-   cerrar o sentencias truncas), PLY llama a p_error con el parámetro "p = None".
-   En los ejemplos introductorios de la cátedra, acceder a p.lineno ante esta
-   situación provoca una excepción fatal de Python (AttributeError).
-   Para subsanarlo con robustez, se diseñó la clase envoltorio TrackingLexer,
-   la cual intercepta cada solicitud de token y memoriza la línea del último
-   token real leído. Cuando p es None, p_error consulta a TrackingLexer para
-   reportar exactamente la línea del último token presente en el archivo (o la
-   línea 1 si el archivo estaba completamente vacío o solo contenía comentarios),
-   satisfaciendo la exigencia de la sección 7.2 del enunciado.
-2. Descripción contextualizada del error:
-   Cuando el error se detecta en un token presente (p is not None), se recupera
-   su posición absoluta (p.lexpos) y se genera una descripción clara del lexema
-   hallado (por ejemplo, "se encontro 'delay' no esperado").
-
-3.5. Algoritmo de desempate y la Regla de Oro (compilador.py)
-La sección 7.2 del enunciado exige reportar siempre el primer error en el orden
-de lectura del archivo. Para satisfacer esta regla de oro:
-1. El analizador léxico escanea el texto completo acumulando en memoria todos
-   los caracteres inválidos, preservando para cada uno su línea y su posición
-   absoluta de desplazamiento en bytes (lexpos).
-2. El analizador sintáctico procesa la secuencia y, de fallar, reporta la
-   posición absoluta del token causante (lexpos) o bien marca el error como EOF.
-3. El módulo coordinador compilador.compilar_codigo arbitra el resultado:
-   - Si el fallo sintáctico es por fin de archivo prematuro (EOF), el error
-     léxico gana siempre, puesto que cualquier carácter inválido dentro del
-     código se encuentra físicamente antes del final del archivo.
-   - Si el fallo sintáctico ocurrió en un token físico, se comparan sus
-     posiciones absolutas: si pos_lex < pos_sint prevalece el ERROR LEXICO;
-     de lo contrario, prevalece el ERROR SINTACTICO.
-   - Si se detectó un único tipo de error, se informa dicho error.
-   - Si ambas fases completaron sin fallas, se emite "OK".
+3.5. Regla de oro y coordinación en compilador.py
+La sección 7.2 exige reportar siempre el primer error en el orden de lectura del
+archivo (de arriba hacia abajo y, dentro de la misma línea, de izquierda a
+derecha).
+Para cumplirlo, compilador.py coordina ambos módulos:
+1. Primero hace un escaneo léxico completo con lexico.crear_lexer() y acumula
+   todos los errores léxicos en una lista, guardando línea y posición absoluta
+   (lexpos).
+2. Luego ejecuta el parser sintáctico con sintactico.analizar().
+3. Si ambos detectan errores, desempata:
+   - Si el error sintáctico fue por fin de archivo (EOF), gana siempre el error
+     léxico, porque cualquier carácter inválido dentro del código está antes
+     del fin de archivo.
+   - Si el error sintáctico ocurrió en un token físico, compara las posiciones
+     absolutas: si la posición del error léxico es menor, gana el error léxico;
+     de lo contrario, gana el sintáctico.
+4. Si se detectó un solo tipo de error, informa ese.
+5. Si no hubo fallas, imprime "OK".
+Además, al abrir archivos usamos encoding='utf-8-sig' para descartar de forma
+transparente un BOM inicial (común en editores de Windows), evitando falsos
+errores léxicos en la línea 1.
 
 
 4. USO DE INTELIGENCIA ARTIFICIAL
 --------------------------------------------------------------------------------
-En estricto cumplimiento con la Sección 13 del enunciado del Proyecto Integrador,
-se detalla la utilización de herramientas de Inteligencia Artificial (IA) durante
-el ciclo de desarrollo. La IA fue empleada exclusivamente como recurso de
-consulta conceptual, generación de casos de prueba adversarios y apoyo en el
-análisis de comportamiento, manteniendo en todo momento el control, auditoría,
-comprensión y diseño final a cargo de los integrantes del grupo.
+Usamos IA durante todo el proyecto, y creemos que la mejor forma de contarlo es
+explicar primero cómo la usamos en general y después destacar las tres
+situaciones en las que más nos ayudó.
 
-4.1. Herramientas empleadas
-- Asistentes de inteligencia artificial y modelos de lenguaje avanzados:
-  Claude Sonnet 5.5 (Anthropic) y Gemini 3.8 Flash (Google), utilizados a través
-  de interfaces de desarrollo asistido para consultas teóricas sobre la
-  biblioteca PLY y generación automatizada de datos de prueba.
+4.1. Herramientas
+Usamos Claude Sonnet 5.5 (Anthropic) y Gemini 3.8 Flash (Google) desde el
+editor de código, mientras programábamos.
 
-4.2. Consultas, finalidades, aportes y verificación crítica humana
+4.2. Cómo la usamos en general
+La usamos como un compañero de consulta al que le podíamos preguntar cosas
+mientras avanzábamos, sobre todo para tres cosas:
+- Entender PLY: la documentación es corta y varias cosas (el orden de las
+  reglas, qué pasa con los errores) no las entendíamos de entrada, así que
+  preguntábamos y después lo comprobábamos en el manual y en nuestro código.
+- Pensar casos de prueba: nos sirvió para que nos proponga casos raros que a
+  nosotros no se nos ocurrían, además de los 9 casos públicos de la cátedra.
+- Entender errores: cuando algo fallaba y no sabíamos por qué, le pasábamos el
+  error y el código para tener una explicación posible.
+Las decisiones de diseño (la gramática, la estructura de los módulos y cómo
+informar los errores) las tomamos nosotros a partir de lo visto en la materia.
+Siempre comprobamos lo que nos decía ejecutando el compilador con casos de
+prueba: lo que no se podía comprobar, no lo usamos.
 
-a) Generación de baterías de pruebas adversarias y casos límite
-   - Consulta: Asistencia en la formulación automatizada de secuencias de código
-     complejas y casos de estrés en el subconjunto de Arduino.
-   - Finalidad: Ampliar drásticamente la cobertura de pruebas sobre el analizador
-     léxico y sintáctico más allá de los casos públicos, evaluando situaciones
-     extremas (anidamiento de expresiones, delimitadores truncos, caracteres
-     fuera de norma ASCII, comentarios multilínea no cerrados, manejo de BOM).
-   - Resultado obtenido: Generación de scripts auxiliares y más de 200 casos de
-     prueba que conformaron la suite masiva de "pruebas-grupo/".
-   - Verificación y adaptación humana: El equipo auditó manualmente cada caso
-     generado contra la especificación formal del Anexo. Se detectaron y
-     corrigieron casos donde la IA asumía comportamientos no especificados (por
-     ejemplo, en los casos de comillas mezcladas lex-33 y lex-45 documentados en
-     el log de errores), adaptando los archivos fuente y ajustando los valores
-     esperados para cumplir estrictamente con los criterios de la cátedra.
+4.3. Las tres situaciones donde más nos ayudó
 
-b) Diagnóstico conceptual de mecánicas internas de PLY (ply.lex)
-   - Consulta: Consulta técnica sobre la precedencia interna de evaluación en
-     ply.lex cuando coexisten reglas definidas mediante funciones ("def t_*") y
-     reglas definidas mediante cadenas literales ("t_* = r'...'").
-   - Finalidad: Diagnosticar un fallo imprevisto detectado en 18 casos de prueba,
-     donde la llamada "Serial.println" era partida erróneamente por el lexer
-     como un IDENTIFICADOR "Serial" seguido de un carácter '.' ilegal.
-   - Resultado obtenido: Comprensión teórica del modelo de PLY: las funciones se
-     evalúan con prioridad absoluta antes que las cadenas, sin importar la
-     longitud del patrón.
-   - Verificación y adaptación humana: El grupo validó esta explicación
-     contrastándola con el código fuente y manual oficial de PLY 3.11, diseñó la
-     solución transformando t_SERIAL_PRINTLN en una función ubicada antes de
-     t_IDENTIFICADOR, y registró el problema y su solución en log-de-errores.md,
-     logrando el 100% de éxito en la suite.
+a) Serial.println partido en dos por el lexer
+Al probar el analizador léxico, 'Serial.println' no salía como un solo token:
+el lexer tomaba 'Serial' como identificador y el '.' como carácter no válido,
+y fallaban 18 casos de prueba. No entendíamos por qué si el patrón de
+Serial.println es más largo que el de un identificador.
+Le consultamos a la IA y nos explicó que en ply.lex las reglas escritas como
+función (def t_*) se prueban antes que las escritas como cadena (t_* = '...'),
+sin importar el largo del patrón, y que entre funciones se respeta el orden en
+que están escritas en el archivo. Lo comprobamos en el manual de PLY 3.11 y
+vimos que era así. Convertimos t_SERIAL_PRINTLN en función y la pusimos antes
+de t_IDENTIFICADOR en lexico.py, y los 18 casos pasaron. Lo dejamos anotado en
+un registro de errores propio que llevamos durante el desarrollo.
 
-c) Diseño del algoritmo de desempate y la Regla de Oro (compilador.py)
-   - Consulta: Consulta metodológica para implementar el criterio de la sección
-     7.2 ("reportar el primer error en el orden de lectura") ante la presencia
-     simultánea de errores léxicos y sintácticos.
-   - Finalidad: Definir una arquitectura limpia para que ambos analizadores
-     cooperen sin interferencias (sin prints prematuros en consola) y permitan
-     un desempate exacto ante casos sutiles (como errores sintácticos y léxicos
-     en la misma línea o terminaciones prematuras por EOF).
-   - Resultado obtenido: Sugerencia conceptual de comparar posiciones absolutas
-     de caracteres (lexpos) y encapsular el seguimiento de tokens en un lexer
-     adaptador.
-   - Verificación y adaptación humana: Los integrantes implementaron la clase
-     TrackingLexer en sintactico.py, definieron la recolección pasiva de errores
-     en lexico.py (t_error acumulativo), y estructuraron el árbitro central en
-     compilador.compilar_codigo, verificándolo mediante una batería de 154
-     micro-pruebas de regresión escritas y validadas por el equipo.
+b) Fin de archivo prematuro en el analizador sintáctico
+Cuando un programa terminaba incompleto (por ejemplo, con una llave sin
+cerrar), PLY llama a p_error con p = None y nuestro código se rompía con un
+AttributeError al intentar leer el número de línea. El enunciado (sección 7.2)
+pide informar la línea del último token, así que necesitábamos guardarla.
+Le preguntamos cómo hacerlo sin romper lo que espera PLY, y nos sugirió
+envolver el lexer en una clase que recuerde la línea de cada token que le
+entrega al parser. Escribimos esa clase (TrackingLexer, en sintactico.py) y
+la adaptamos para que, si el archivo está vacío o solo tiene comentarios,
+informe la línea 1. Después la probamos con casos de fin de archivo.
 
-4.3. Reflexión crítica sobre el rol de la IA
-La IA actuó como una herramienta de aceleración productiva y un interlocutor
-técnico calificado para el contraste de ideas. Sin embargo, su aporte requirió
-un filtro humano constante y riguroso: sin el dominio cabal de la teoría de
-compiladores (autómatas, gramáticas libres de contexto, parsers LALR) y sin una
-auditoría crítica permanente, los sesgos y suposiciones erróneas del modelo
-habrían introducido inconsistencias en la entrega.
+c) Casos de prueba y errores de la propia IA
+Para probar más allá de los casos públicos, le pedimos que genere programas
+con situaciones límite: comentarios sin cerrar, archivos con BOM, saltos de
+línea CRLF, comillas mezcladas, etc. Así armamos buena parte de las más de 200
+pruebas propias del grupo (en el repositorio de desarrollo; en esta entrega se
+incluyen solo los dos casos pedidos en pruebas/).
+Acá tuvimos que intervenir bastante: algunos casos tenían una salida esperada
+equivocada porque la IA daba por válidas cosas de C++ que el anexo no permite
+o decidía mal cuál error aparecía primero. Por ejemplo, en los casos lex-33 y
+lex-45 esperaba un error léxico cuando en la misma línea había un error
+sintáctico más a la izquierda. Revisamos los casos contra el anexo y la
+sección 7.2, corregimos esos dos y ajustamos el código de compilador.py para
+comparar la posición de cada error y no solo la línea. Para no romper nada
+con ese cambio armamos una batería de 154 micro-pruebas que corremos cada vez
+que tocamos el código.
+
+4.4. Reflexión
+Nos sirvió para ir más rápido y para entender PLY, pero no podíamos aceptar
+sus respuestas sin revisarlas: se equivocó en varios casos de prueba y hubo
+que corregirlo. Haber visto en la cursada autómatas, gramáticas y análisis
+LALR nos permitió darnos cuenta cuándo una respuesta no cuadraba con el
+enunciado.
 
 
 5. FUENTES CONSULTADAS
 --------------------------------------------------------------------------------
-1. Documentación oficial y especificaciones de herramientas:
+1. Documentación oficial de herramientas:
    - Beazley, David M. "PLY (Python Lex-Yacc)", Versión 3.11 (2018).
-     Manual oficial en línea: https://www.dabeaz.com/ply/ply.html
+     Manual oficial: https://www.dabeaz.com/ply/ply.html
      Consultado para el diseño de analizadores LALR(1), la sintaxis de funciones
-     p_*, el manejo de errores en p_error con tokens None ante EOF, y la auditoría
-     de tablas y estados en parser.out.
+     p_*, el manejo de p_error con tokens None ante EOF y la auditoría de
+     tablas en parser.out.
 
-2. Material didáctico de la cátedra de Compiladores 2026 (UCASAL):
-   - Profesores: Cardoso Carolina y Tolaba Miguel. Lecciones teóricas, guías prácticas y
-     presentaciones sobre Análisis Léxico, Análisis Sintáctico Ascendente y manejo de errores.
+2. Material de la cátedra de Compiladores 2026 (UCASAL):
+   - Profesores: Mg. Lic. Carolina Cardoso e Ing. Miguel N. Tolaba.
+     Lecciones teóricas, guías prácticas y presentaciones sobre Análisis
+     Léxico, Análisis Sintáctico Ascendente y Manejo de Errores.
    - Programas de referencia provistos por el equipo docente:
      * calclex.py: Especificación léxica con tokens simples y funciones en PLY.
-     * calcyacc.py: Implementación de gramáticas estratificadas y precedencia sin
-       tabla externa precedence.
+     * calcyacc.py: Implementación de gramáticas estratificadas para precedencia
+       sin tabla externa precedence.
      * ej1yacc.py: Estructura general de inicialización y ejecución del parser.
 
 ================================================================================
